@@ -2,712 +2,553 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>شات ريمة</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شات ريمه - أبو جواس</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', Tahoma, sans-serif; }
-        body { background: #0f172a; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        :root {
+            --card-bg: #0b1124; 
+            --btn-blue-dark: #050a17; 
+            --btn-blue-light: #101b3d; 
+            --gold-border: #ff9900; 
+            --gold-glow: rgba(255, 153, 0, 0.7); 
+            --text-main: #e2e8f0; 
+            --text-sub: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            user-select: none; 
+            -webkit-user-select: none;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #0a1329 0%, #03050a 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* التصميم الزجاجي والبروز */
+        .phone-container {
+            position: relative;
+            width: 100%;
+            max-width: 290px;
+            margin: 0 auto;
+            padding: 3px; 
+            border-radius: 30px;
+            background: conic-gradient(from 0deg, #ff9900, #a855f7, #06b6d4, #ff9900);
+            animation: rotateLight 4s linear infinite;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9); 
+        }
+
+        @keyframes rotateLight {
+            0% { background: conic-gradient(from 0deg, #ff9900, #a855f7, #06b6d4, #ff9900); }
+            25% { background: conic-gradient(from 90deg, #ff9900, #a855f7, #06b6d4, #ff9900); }
+            50% { background: conic-gradient(from 180deg, #ff9900, #a855f7, #06b6d4, #ff9900); }
+            75% { background: conic-gradient(from 270deg, #ff9900, #a855f7, #06b6d4, #ff9900); }
+            100% { background: conic-gradient(from 360deg, #ff9900, #a855f7, #06b6d4, #ff9900); }
+        }
+
+        .phone-inner {
+            background: var(--card-bg);
+            border-radius: 27px; 
+            position: relative;
+            z-index: 1;
+            padding: 25px 15px 10px 15px;
+            display: flex;
+            flex-direction: column;
+            min-height: 530px;
+        }
+
+        .side-btn {
+            position: absolute;
+            width: 6px;
+            background: linear-gradient(90deg, #333, #111);
+            border: 1px solid var(--gold-border);
+            box-shadow: inset 0 0 5px rgba(255,153,0,0.5);
+            border-radius: 3px;
+            z-index: 10;
+        }
+
+        .power-btn {
+            right: -6px; 
+            top: 100px;
+            height: 50px;
+            background: linear-gradient(90deg, #ff4500, #8b0000);
+            border-color: #ff4500;
+            box-shadow: 0 0 10px rgba(255, 69, 0, 0.8);
+            cursor: pointer;
+        }
+
+        .vol-up-btn { left: -6px; top: 90px; height: 40px; }
+        .vol-down-btn { left: -6px; top: 135px; height: 40px; }
+
+        .title-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px; 
+            margin-bottom: 20px; 
+            width: 100%;
+        }
+
+        .title-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            gap: 6px; 
+        }
+
+        .glass-box {
+            height: 32px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(180deg, var(--btn-blue-light) 0%, var(--btn-blue-dark) 100%);
+            border: 1px solid var(--gold-border); 
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.8), -1px -1px 3px rgba(255,255,255,0.1), 0 0 8px var(--gold-glow); 
+        }
+
+        .box-chat { flex: 1; border-radius: 20px 5px 20px 20px; }
+        .box-dardasha { flex: 1; border-radius: 5px 20px 20px 20px; }
+        .box-reema { width: 80%; border-radius: 20px 20px 20px 5px; }
+
+        .app-title {
+            font-family: 'Amiri', serif;
+            font-size: 14px; 
+            font-weight: 700;
+            color: #ffffff; 
+            margin: 0; 
+            line-height: 1; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .title-reema {
+            font-size: 16px; 
+            letter-spacing: 1px; 
+        }
+
+        .top-icon {
+            width: 75px; 
+            height: 75px;
+            border-radius: 50%; 
+            background: var(--card-bg);
+            margin: 0 auto 25px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid var(--gold-border); 
+            box-shadow: 0 15px 25px rgba(0,0,0,0.9), 0 0 15px var(--gold-glow), inset 0 3px 8px rgba(255,255,255,0.4), inset 0 -3px 8px rgba(0,0,0,0.6);
+            font-size: 30px; 
+            color: var(--gold-border);
+        }
+
+        .bottom-section {
+            margin-top: auto; 
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .input-group { 
+            position: relative; 
+            margin-bottom: 12px; 
+        }
         
-        @keyframes fastNeonGlow {
-            0% { border-color: #ff0055; box-shadow: 0 0 20px rgba(255, 0, 85, 0.9), inset 0 2px 6px rgba(255,255,255,0.9); }
-            20% { border-color: #00ffcc; box-shadow: 0 0 25px rgba(0, 255, 204, 0.9), inset 0 2px 6px rgba(255,255,255,0.9); }
-            40% { border-color: #ffcc00; box-shadow: 0 0 25px rgba(255, 204, 0, 0.9), inset 0 2px 6px rgba(255,255,255,0.9); }
-            60% { border-color: #9900ff; box-shadow: 0 0 25px rgba(153, 0, 255, 0.9), inset 0 2px 6px rgba(255,255,255,0.9); }
-            80% { border-color: #00ff00; box-shadow: 0 0 25px rgba(0, 255, 0, 0.9), inset 0 2px 6px rgba(255,255,255,0.9); }
-            100% { border-color: #ff0055; box-shadow: 0 0 20px rgba(255, 0, 85, 0.9), inset 0 2px 6px rgba(255,255,255,0.9); }
+        .input-group i {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gold-border); 
+            font-size: 13px; 
+            z-index: 2;
         }
 
-        @keyframes pulseRima {
-            0% { border-color: #00ffcc; box-shadow: inset 2px 2px 4px #beccde, 0 0 8px rgba(0,255,204,0.6); }
-            50% { border-color: #ff0055; box-shadow: inset 2px 2px 4px #beccde, 0 0 8px rgba(255,0,85,0.6); }
-            100% { border-color: #00ffcc; box-shadow: inset 2px 2px 4px #beccde, 0 0 8px rgba(0,255,204,0.6); }
+        .input-group input {
+            width: 100%;
+            height: 38px; 
+            padding: 0 35px 0 12px;
+            border-radius: 20px 5px 20px 5px; 
+            background: linear-gradient(180deg, var(--btn-blue-light) 0%, var(--btn-blue-dark) 100%);
+            color: white;
+            font-size: 11px; 
+            font-weight: 700;
+            border: 1px solid var(--gold-border); 
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.7), -1px -1px 4px rgba(255,255,255,0.1);
+            outline: none;
         }
 
-        @keyframes pulseGroup {
-            0% { border-color: #ffcc00; box-shadow: inset 2px 2px 4px #beccde, 0 0 8px rgba(255,204,0,0.6); }
-            50% { border-color: #0066ff; box-shadow: inset 2px 2px 4px #beccde, 0 0 8px rgba(0,102,255,0.6); }
-            100% { border-color: #ffcc00; box-shadow: inset 2px 2px 4px #beccde, 0 0 8px rgba(255,204,0,0.6); }
+        .input-group input::placeholder { 
+            color: #94a3b8; 
+            font-weight: 600;
+            font-size: 10px;
         }
 
-        .app-container {
-            width: 100%; max-width: 300px; height: 100%; max-height: 570px;
-            background: #e4e9f2; border-radius: 22px;
-            display: flex; flex-direction: column; padding: 10px;
-            position: relative; overflow: hidden; border: 3px solid #ff0055;
-            animation: fastNeonGlow 1.2s infinite linear;
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px; 
+            font-size: 9px; 
+            color: var(--text-sub);
         }
 
-        .screen-container { flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden; }
-        .screen { display: none; flex-direction: column; width: 100%; height: 100%; position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow-y: auto; padding: 4px; background: #e4e9f2; }
-        .screen.active { display: flex !important; }
+        .checkbox-group { display: flex; align-items: center; gap: 4px; cursor: pointer; }
+        .checkbox-group input[type="checkbox"] { width: 10px; height: 10px; accent-color: var(--gold-border); }
+        .forgot-pass { color: #60a5fa; text-decoration: none; font-weight: 600; }
 
-        /* تعديل جوهري لمنع الشاشة البيضاء في قسم الشات والغرقة */
-        #screen-chats.active {
-            display: flex !important;
-            flex-direction: column !important;
-            justify-content: flex-start !important;
-            background: #e4e9f2 !important;
-        }
-
-        .top-action-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; gap: 6px; flex-shrink: 0; z-index: 20; }
-        .top-btn {
-            flex: 1; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
-            font-size: 11px; font-weight: 700; cursor: pointer; background: #e4e9f2;
-            box-shadow: 4px 4px 8px #beccde, -4px -4px 8px #ffffff;
-        }
-        .top-btn:active { box-shadow: inset 2px 2px 4px #beccde, inset -2px -2px 4px #ffffff; }
-        .btn-rima { border: 2px solid #00ffcc; color: #065f46; animation: pulseRima 1.5s infinite linear; }
-        .btn-group { border: 2px solid #ffcc00; color: #9a3412; animation: pulseGroup 1.5s infinite linear; }
-
-        #group-options-modal {
-            display: none; position: absolute; top: 44px; left: 10px; width: 160px;
-            background: #ffffff; border-radius: 10px; border: 2px solid #ffcc00;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 100; padding: 5px;
-        }
-        .group-option-item {
-            padding: 5px; margin: 2px 0; background: #f1f5f9; border-radius: 6px;
-            font-size: 10px; font-weight: bold; color: #1e293b; text-align: center; cursor: pointer;
+        .btn-main, .btn-secondary {
+            width: 100%;
+            height: 38px; 
+            border-radius: 20px 5px 20px 5px; 
+            background: linear-gradient(180deg, #1a2f66 0%, var(--btn-blue-dark) 100%); 
+            color: white;
+            font-size: 13px; 
+            font-weight: 900;
+            cursor: pointer;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid var(--gold-border); 
+            box-shadow: 0 10px 15px rgba(0,0,0,0.6), 0 5px 0 #02050d, 0 0 10px var(--gold-glow), inset 0 2px 5px rgba(255,255,255,0.3); 
+            transition: all 0.1s ease; 
         }
 
-        .login-content-box {
-            display: flex; flex-direction: column; justify-content: center; flex: 1; padding: 6px 0;
-        }
-        .top-chat-bubbles-box {
-            width: 60px; height: 60px; border-radius: 50%;
-            background: #e4e9f2;
-            box-shadow: 5px 5px 10px #beccde, -5px -5px 10px #ffffff;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 8px auto; font-size: 24px; color: #2563eb;
-            border: 2px solid #93c5fd;
+        .btn-main i { color: var(--gold-border); font-size: 14px; }
+
+        .btn-pressed {
+            transform: translateY(5px); 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4), 0 0px 0 #02050d, 0 0 5px var(--gold-glow) !important; 
         }
 
-        .title-text { font-size: 13px; font-weight: 700; color: #1d4ed8; margin-bottom: 2px; text-align: center; }
-
-        .input-group { position: relative; width: 100%; margin-bottom: 6px; }
-        .input-group input, .input-group select {
-            width: 100%; padding: 7px 10px 7px 32px;
-            background: #e4e9f2; border: none; outline: none; border-radius: 8px;
-            font-size: 10px; color: #2d3748;
-            box-shadow: inset 3px 3px 6px #beccde, inset -3px -3px 6px #ffffff;
-        }
-        .input-group input::placeholder { color: #a0aec0; }
-        .input-icon { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); color: #718096; font-size: 10px; }
-
-        .options-row { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 9px; padding: 0 2px; }
-        .remember-me { display: flex; align-items: center; gap: 4px; color: #4a5568; cursor: pointer; }
-        .remember-me input { width: 11px; height: 11px; accent-color: #3182ce; }
-        .forgot-pass { color: #3182ce; text-decoration: none; font-weight: 600; }
-
-        .btn-submit {
-            width: 100%; padding: 8px; background: #e4e9f2; border: none; border-radius: 8px;
-            font-size: 10px; font-weight: 700; color: #3182ce;
-            box-shadow: 4px 4px 8px #beccde, -4px -4px 8px #ffffff;
-            cursor: pointer; transition: 0.1s; margin-bottom: 5px;
-        }
-        .btn-submit:active { box-shadow: inset 2px 2px 4px #beccde, inset -2px -2px 4px #ffffff; }
-        .btn-sec { color: #475569 !important; }
-
-        .quick-login-row { display: flex; gap: 6px; margin-top: 4px; }
-        .quick-btn {
-            flex: 1; padding: 6px; background: #e4e9f2; border: none; border-radius: 8px;
-            font-size: 9px; font-weight: bold; color: #334155; cursor: pointer;
-            box-shadow: 3px 3px 6px #beccde, -3px -3px 6px #ffffff; text-align: center;
+        .btn-secondary {
+            height: 34px;
+            font-size: 11px;
         }
 
-        .contact-item {
-            background: #ffffff; padding: 8px 10px; margin: 4px 0; border-radius: 10px;
-            display: flex; align-items: center; justify-content: space-between; cursor: pointer;
-            box-shadow: 3px 3px 6px #beccde, -3px -3px 6px #ffffff; border: 1px solid #cbd5e1;
-        }
-        .contact-left { display: flex; align-items: center; gap: 8px; flex: 1; }
-        .contact-avatar { width: 30px; height: 30px; border-radius: 50%; background: #2563eb; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 10px; font-weight: bold; }
-        .contact-info h4 { color: #1e293b; font-size: 11px; font-weight: bold; }
-        .contact-info p { color: #64748b; font-size: 8px; }
-        .close-chat-btn { background: #ef4444; color: #fff; border: none; width: 16px; height: 16px; border-radius: 50%; font-size: 8px; cursor: pointer; }
-
-        #active-chats-container {
-            width: 100%; flex: 1; overflow-y: auto; padding: 2px; display: flex; flex-direction: column;
+        .bottom-texts {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 5px;
         }
 
-        /* شاشة المحادثة */
-        #screen-chat {
-            display: none; flex-direction: column; justify-content: space-between; height: 100%; position: absolute; top: 0; left: 0; right: 0; bottom: 0; padding: 4px; background: #e4e9f2;
-        }
-        #chat-box-container {
-            flex: 1; border-radius: 10px; padding: 6px; margin-bottom: 6px; overflow-y: auto; background: #fdfdfd;
-            box-shadow: inset 3px 3px 6px #beccde, inset -3px -3px 6px #ffffff;
-        }
-        .chat-bubble-other { background: #ffffff; border-radius: 6px; padding: 4px 6px; margin: 3px 0; max-width: 85%; font-size: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-        .chat-bubble-me { background: #d9f99d; border-radius: 6px; padding: 4px 6px; margin: 3px 0 3px auto; max-width: 85%; font-size: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-        .whatsapp-checks { color: #2563eb; font-weight: bold; font-size: 9px; letter-spacing: -2px; }
-
-        .chat-input-footer {
-            display: flex; gap: 5px; align-items: center; background: #e4e9f2; padding: 6px; border-radius: 10px;
-            box-shadow: 4px 4px 8px #beccde, -4px -4px 8px #ffffff; flex-shrink: 0; margin-bottom: 2px;
+        .bottom-dua {
+            color: #a78bfa;
+            font-size: 10px;
+            font-weight: 700;
+            margin: 0 0 5px 0; 
+            line-height: 1.1;
+            position: relative;
+            top: -2px; 
         }
 
-        .floating-add-btn {
-            position: absolute; bottom: 8px; left: 8px; width: 36px; height: 36px;
-            background: #2563eb; color: #fff; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold;
-            box-shadow: 4px 4px 8px #beccde, -4px -4px 8px #ffffff; cursor: pointer; z-index: 50;
+        .developer-name {
+            font-size: 9px;
+            color: var(--text-sub);
+            font-weight: 600;
+            margin: 0; 
+            line-height: 1.1;
+        }
+        .developer-name span { color: var(--gold-border); font-weight: bold; }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 8px;
+            margin: 2px 0;
+            font-weight: 600;
+            width: 100%;
         }
 
-        .foot { width: 100%; margin-top: auto; display: flex; flex-direction: column; gap: 3px; padding-top: 4px; flex-shrink: 0; }
-        .lang-select-footer {
-            width: 100%; height: 30px; border-radius: 8px; background: #e4e9f2;
-            border: 2px solid #cbd5e1; font-size: 9px; font-weight: bold; color: #1e293b;
-            text-align: center; outline: none; cursor: pointer;
-            box-shadow: inset 2px 2px 4px #beccde, inset -2px -2px 4px #ffffff;
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-        .blessing-box { background: linear-gradient(135deg, #a855f7, #7e22ce); color: #fff; text-align: center; padding: 3px; border-radius: 5px; font-size: 9px; font-weight: bold; }
-        .dev-box { background: linear-gradient(135deg, #99f6e4, #5eead4); color: #0f172a; text-align: center; padding: 2px; border-radius: 5px; font-size: 8px; font-weight: bold; }
-        .dev-box span { display: block; color: #134e4a; font-size: 7px; }
+
+        .divider span { padding: 0 5px; }
+
+        .phone-number {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px; 
+            font-size: 9px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 0; 
+            direction: ltr; 
+            text-decoration: none; 
+            line-height: 1.1;
+        }
+
+        .whatsapp-icon {
+            color: #25D366; 
+            font-size: 11px;
+        }
+
+        #registerCard { display: none; }
+        #chatScreen { display: none; flex-direction: column; justify-content: center; align-items: center; }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <div>
-        <div class="top-action-bar">
-            <button class="top-btn btn-rima" onclick="openRimaMainRoom()">شات ريمة</button>
-            <button class="top-btn btn-group" onclick="toggleGroupOptions()">دردشة جماعية</button>
+    <div class="phone-container">
+        <div class="side-btn power-btn"></div>
+        <div class="side-btn vol-up-btn"></div>
+        <div class="side-btn vol-down-btn"></div>
 
-            <div id="group-options-modal">
-                <div class="group-option-item" onclick="openCreateRoomScreen('خاصة')">إنشاء غرفة خاصة</div>
-                <div class="group-option-item" onclick="openCreateRoomScreen('عامة')">إنشاء غرفة عامة</div>
-                <div class="group-option-item" onclick="searchRooms()">البحث عن غرف الدردشة</div>
-                <div id="owner-panel-menu" class="group-option-item" style="display:none; background:#fed7aa; color:#9a3412;" onclick="openOwnerPanel()">👑 لوحة المالك</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="screen-container">
-        <!-- 1. شاشة تسجيل الدخول -->
-        <div id="screen-login" class="screen active">
-            <div class="login-content-box">
-                <div class="top-chat-bubbles-box">💬</div>
-                <div class="title-text">أهلاً بكم في شات ريمه</div>
-                <div style="height: 10px;"></div>
-
-                <div class="input-group">
-                    <span class="input-icon">👤</span>
-                    <input type="text" id="username" placeholder="اسم المستخدم أو الهاتف">
-                </div>
-
-                <div class="input-group">
-                    <span class="input-icon">🔒</span>
-                    <input type="password" id="password" placeholder="كلمة المرور">
-                </div>
-
-                <div class="options-row">
-                    <label class="remember-me">
-                        <input type="checkbox" id="remember"> تذكرني
-                    </label>
-                    <a href="#" class="forgot-pass" onclick="switchScreen('screen-forgot')">هل نسيت كلمة المرور؟</a>
-                </div>
-
-                <button class="btn-submit" onclick="login()">تسجيل الدخول</button>
-                <button class="btn-submit btn-sec" onclick="switchScreen('screen-register')">إنشاء حساب جديد</button>
-
-                <div class="quick-login-row">
-                    <button class="quick-btn" onclick="openPhoneLogin()">📱 برقم الهاتف</button>
-                    <button class="quick-btn" onclick="openGoogleLogin()">🌐 دخول جوجل</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 2. صفحة تسجيل جوجل -->
-        <div id="screen-google-login" class="screen">
-            <div class="login-content-box" style="text-align: center; padding: 10px;">
-                <div class="top-chat-bubbles-box" style="font-size: 26px; color: #db4437;">🌐</div>
-                <div class="title-text">ربط وتجسيد حساب Google</div>
-                <div style="font-size: 9px; color: #64748b; margin-bottom: 12px;">أدخل بريدك في جوجل لربط الحساب وحماية التطبيق</div>
-
-                <div class="input-group">
-                    <span class="input-icon">📧</span>
-                    <input type="email" id="google-email" placeholder="example@gmail.com">
-                </div>
-
-                <div class="input-group">
-                    <span class="input-icon">🔑</span>
-                    <input type="password" id="google-pass" placeholder="كلمة مرور حساب جوجل">
-                </div>
-
-                <button class="btn-submit" onclick="verifyGoogleLogin()">ربط ودخول آمن 🚀</button>
-                <button class="btn-submit btn-sec" onclick="switchScreen('screen-login')">العودة</button>
-            </div>
-        </div>
-
-        <!-- 3. صفحة تسجيل رقم الهاتف -->
-        <div id="screen-phone-login" class="screen">
-            <div class="login-content-box" style="padding: 10px;">
-                <div class="top-chat-bubbles-box" style="font-size: 24px; color: #059669;">📱</div>
-                <div class="title-text">التسجيل عبر رقم الهاتف</div>
-                <div style="font-size: 9px; color: #64748b; margin-bottom: 10px; text-align: center;">أدخل رقم جوالك لتلقي كود التحقق الأمني</div>
-
-                <div class="input-group">
-                    <span class="input-icon">📞</span>
-                    <input type="tel" id="phone-number" placeholder="أدخل رقم الجوال...">
-                </div>
-
-                <button class="btn-submit" onclick="sendSmsCode()">إرسال كود التحقق إلى الجوال 📨</button>
-
-                <div class="input-group" style="margin-top: 8px;">
-                    <span class="input-icon">🔢</span>
-                    <input type="text" id="phone-sms-code" placeholder="أدخل كود التحقق (4 أرقام)...">
-                </div>
-
-                <button class="btn-submit btn-sec" onclick="verifyPhoneSms()">تأكيد الكود ودخول التطبيق ✅</button>
-                <button class="btn-submit btn-sec" onclick="switchScreen('screen-login')">العودة</button>
-            </div>
-        </div>
-
-        <!-- 4. شاشة نسيت كلمة المرور -->
-        <div id="screen-forgot" class="screen">
-            <div class="login-content-box">
-                <div class="top-chat-bubbles-box">🔑</div>
-                <div class="title-text">استعادة كلمة المرور</div>
-                <div style="height: 10px;"></div>
-
-                <div class="input-group">
-                    <span class="input-icon">📧</span>
-                    <input type="email" id="recovery-email" placeholder="البريد الإلكتروني للإستعادة">
-                </div>
-
-                <button class="btn-submit" onclick="sendRecoveryCode()">إرسال كود التحقق 🚀</button>
+        <div class="phone-inner">
+            
+            <!-- 1. صفحة تسجيل الدخول -->
+            <div id="loginCard" style="display: flex; flex-direction: column; width: 100%; height: 100%;">
                 
-                <div class="input-group" style="margin-top: 6px;">
-                    <span class="input-icon">🔢</span>
-                    <input type="text" id="verification-code" placeholder="أدخل كود التحقق المرسل...">
-                </div>
-
-                <button class="btn-submit btn-sec" onclick="verifyAndReset()">تأكيد واستعادة الحساب</button>
-                <button class="btn-submit btn-sec" onclick="switchScreen('screen-login')">العودة لتسجيل الدخول</button>
-            </div>
-        </div>
-
-        <!-- 5. شاشة إنشاء حساب -->
-        <div id="screen-register" class="screen">
-            <div class="login-content-box" style="padding: 2px 0;">
-                <div class="top-chat-bubbles-box" style="width: 45px; height: 45px; font-size: 18px; margin-bottom: 4px;">➕</div>
-                <div class="title-text" style="font-size: 11px;">حساب جديد</div>
-                <div style="height: 6px;"></div>
-
-                <div class="input-group">
-                    <span class="input-icon">👤</span>
-                    <input type="text" id="reg-username" placeholder="اسم المستخدم">
-                </div>
-
-                <div class="input-group">
-                    <span class="input-icon">🔒</span>
-                    <input type="password" id="reg-password" placeholder="كلمة المرور (أرقام)">
-                </div>
-
-                <div class="input-group">
-                    <span class="input-icon">📧</span>
-                    <input type="email" id="reg-email" placeholder="إيميل الاستعادة (اختياري)">
-                </div>
-
-                <div style="display: flex; gap: 4px;">
-                    <div class="input-group" style="flex: 1;">
-                        <span class="input-icon">📅</span>
-                        <input type="number" id="reg-age" placeholder="العمر">
+                <div class="title-container">
+                    <div class="title-row">
+                        <div class="glass-box box-chat"><div class="app-title">شـــات</div></div>
+                        <div class="glass-box box-dardasha"><div class="app-title">ودردشـــة</div></div>
                     </div>
-                    <div class="input-group" style="flex: 1;">
-                        <span class="input-icon">🌍</span>
-                        <input type="text" id="reg-country" placeholder="الدولة">
+                    <div class="glass-box box-reema"><div class="app-title title-reema">ريـــمـــه</div></div>
+                </div>
+
+                <div class="top-icon"><i class="fas fa-user"></i></div>
+
+                <div class="bottom-section">
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="loginEmail" placeholder="البريد الإلكتروني">
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="loginPassword" placeholder="كلمة المرور">
+                    </div>
+
+                    <div class="options">
+                        <label class="checkbox-group"><input type="checkbox"> تذكرني</label>
+                        <a href="#" class="forgot-pass">نسيت كلمة المرور؟</a>
+                    </div>
+
+                    <button class="btn-main" onmousedown="pressEffect(this)" ontouchstart="pressEffect(this)" onclick="loginUser()">
+                        تسجيل الدخول <i class="fas fa-paper-plane"></i>
+                    </button>
+
+                    <button class="btn-secondary" onmousedown="pressEffect(this)" ontouchstart="pressEffect(this)" onclick="showRegister()">
+                        إنشاء حساب جديد <i class="fas fa-user-plus"></i>
+                    </button>
+
+                    <div class="bottom-texts">
+                        <div class="bottom-dua">اللهم صل على محمد</div>
+                        <div class="developer-name">المطور: <span>حيدر فارع</span></div>
+                        <div class="divider"><span>للتواصل والاقتراحات</span></div>
+                        <a href="https://wa.me/967776250412" target="_blank" class="phone-number"><i class="fab fa-whatsapp whatsapp-icon"></i> +967776250412</a>
                     </div>
                 </div>
+            </div>
 
-                <div class="input-group">
-                    <span class="input-icon">🎯</span>
-                    <input type="text" id="reg-goal" placeholder="الهدف من التسجيل بالتطبيق">
+            <!-- 2. صفحة إنشاء حساب جديد -->
+            <div id="registerCard" style="flex-direction: column; width: 100%; height: 100%;">
+                
+                <div class="title-container">
+                    <div class="title-row">
+                        <div class="glass-box box-chat"><div class="app-title">تســـجـــيـــل</div></div>
+                        <div class="glass-box box-dardasha"><div class="app-title">حـــســـاب</div></div>
+                    </div>
                 </div>
 
-                <button class="btn-submit" onclick="registerNewAccount()">تسجيل الحساب</button>
-                <button class="btn-submit btn-sec" onclick="switchScreen('screen-login')">العودة</button>
-            </div>
-        </div>
+                <div class="top-icon"><i class="fas fa-user-plus"></i></div>
 
-        <!-- 6. لوحة المالك -->
-        <div id="screen-owner-panel" class="screen">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; flex-shrink: 0;">
-                <span onclick="switchScreen('screen-chats')" style="cursor: pointer; font-size: 10px; color: #2563eb; font-weight: bold;">⬅ رجوع</span>
-                <h3 style="color: #9a3412; font-size: 11px;">👑 لوحة المالك (أبو جواس)</h3>
-                <span></span>
-            </div>
-            <div id="users-list-container" style="flex: 1; overflow-y: auto; background: #fff; border-radius: 8px; padding: 6px; box-shadow: inset 2px 2px 5px #beccde;"></div>
-        </div>
+                <div class="bottom-section">
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="regName" placeholder="الاسم (بدون مسافات)">
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="regEmail" placeholder="البريد الإلكتروني">
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="regPass" placeholder="كلمة السر (6 حروف/أرقام+)">
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-globe"></i>
+                        <input type="text" id="regCountry" placeholder="البلد">
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-calendar-alt"></i>
+                        <input type="number" id="regAge" placeholder="العمر">
+                    </div>
 
-        <!-- 7. إنشاء غرفة -->
-        <div id="screen-create-room" class="screen">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                <span onclick="switchScreen('screen-chats')" style="cursor: pointer; font-size: 11px; color: #2563eb; font-weight: bold;">⬅ رجوع</span>
-                <h3 id="create-room-heading" style="color: #1d4ed8; font-size: 11px;">إنشاء غرفة</h3>
-                <span></span>
-            </div>
-            <div class="input-group">
-                <input type="text" id="new-room-name" placeholder="اسم الغرفة...">
-            </div>
-            <div class="options-row" style="margin: 6px 0;">
-                <span>تفعيل كلمة السر</span>
-                <input type="checkbox" id="room-pass-toggle" onchange="toggleRoomPassField()">
-            </div>
-            <div class="input-group">
-                <input type="password" id="new-room-pass" placeholder="كلمة سر الغرفة..." style="display: none;">
-            </div>
-            <button class="btn-submit" onclick="submitCreateRoom()">إنشاء الغرفة 🚀</button>
-        </div>
+                    <button class="btn-main" onmousedown="pressEffect(this)" ontouchstart="pressEffect(this)" onclick="registerUser()">
+                        تأكيد التسجيل <i class="fas fa-check"></i>
+                    </button>
 
-        <!-- 8. شاشة المحادثة -->
-        <div id="screen-chat" class="screen">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; flex-shrink: 0;">
-                <span onclick="switchScreen('screen-chats')" style="cursor: pointer; font-size: 11px; color: #2563eb; font-weight: bold;">⬅ رجوع</span>
-                <h3 id="chat-room-title" style="color: #1d4ed8; font-size: 11px;">غرفة الدردشة</h3>
-                <span></span>
+                    <button class="btn-secondary" onmousedown="pressEffect(this)" ontouchstart="pressEffect(this)" onclick="showLogin()">
+                        لديك حساب؟ دخول <i class="fas fa-sign-in-alt"></i>
+                    </button>
+                    
+                    <div class="bottom-texts">
+                        <div class="bottom-dua">اللهم صل على محمد</div>
+                        <div class="developer-name">المطور: <span>حيدر فارع</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. واجهة الدردشة -->
+            <div id="chatScreen" style="display: none; flex-direction: column; width: 100%; height: 100%;">
+                <div class="title-container">
+                    <div class="title-row">
+                        <div class="glass-box box-chat"><div class="app-title">شـــات</div></div>
+                        <div class="glass-box box-dardasha"><div class="app-title">ودردشـــة</div></div>
+                    </div>
+                    <div class="glass-box box-reema"><div class="app-title title-reema">ريـــمـــه</div></div>
+                </div>
+
+                <div class="top-icon"><i class="fas fa-comments"></i></div>
+                
+                <div class="bottom-section" style="justify-content: center; align-items: center;">
+                    <h2 id="welcomeUser" style="color: var(--text-main); font-size: 13px; margin-bottom: 15px;">أهلاً بك 👑</h2>
+                    <button class="btn-main" style="width: 100%;" onmousedown="pressEffect(this)" ontouchstart="pressEffect(this)" onclick="logoutUser()">خروج</button>
+                </div>
             </div>
             
-            <div id="chat-box-container">
-                <div id="chat-box">
-                    <div class="chat-bubble-other">
-                        <div style="font-size: 8px; font-weight: bold; color: #1e293b;">النظام</div>
-                        <div>مرحباً بك في شات ريمة</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="chat-input-footer">
-                <input type="text" id="msg-input" placeholder="اكتب رسالتك..." style="margin: 0; flex: 1; padding: 7px; background: #e4e9f2; border: none; border-radius: 8px; font-size: 10px; box-shadow: inset 2px 2px 4px #beccde, inset -2px -2px 4px #ffffff; outline: none;">
-                <button class="btn-submit" style="width: 55px; margin: 0; padding: 7px; font-size: 9px; flex-shrink: 0;" onclick="sendMessage()">إرسال</button>
-            </div>
-        </div>
-
-        <!-- 9. الرئيسية (تم تأمين ظهور الغرف فيها فور الانتقال) -->
-        <div id="screen-chats" class="screen">
-            <div id="active-chats-container"></div>
-            <div class="floating-add-btn" onclick="openCreateRoomScreen('عامة')" title="إضافة غرفة">+</div>
         </div>
     </div>
 
-    <!-- التذييل -->
-    <div id="footer-brand-container" class="foot">
-        <select class="lang-select-footer" onchange="changeLanguage(this.value)">
-            <option value="ar">🌍 اللغة: العربية</option>
-            <option value="en">🌍 Language: English</option>
-        </select>
-        <div class="blessing-box">اللهم صل على محمد</div>
-        <div class="dev-box">المطور حيدر فارع<span>00967776250412</span></div>
-    </div>
-</div>
+    <!-- كود Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
-<script>
-    let isUserLoggedIn = false;
-    let activeChats = JSON.parse(localStorage.getItem('rima_active_chats')) || [
-        { name: 'شات ريمة الرسمي', desc: 'الغرفة الرئيسية', owner: 'أبو جواس', isPrivate: false }
-    ];
-    let currentRoom = '', currentUser = '', isPrivateChat = false;
-    let generatedSmsCode = '';
+        // إعدادات Firebase الخاصة بك
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRRdm1GjZZBCumw2_w2X7ZUMkb6q1LvrU",
+            authDomain: "chatrima.firebaseapp.com",
+            databaseURL: "https://chatrima-default-rtdb.firebaseio.com",
+            projectId: "chatrima",
+            storageBucket: "chatrima.firebasestorage.app",
+            messagingSenderId: "1015405153719",
+            appId: "1:1015405153719:web:68e090063d02b6622a2c32",
+            measurementId: "G-KDBBTEPHJ5"
+        };
 
-    function switchScreen(screenId) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        let targetScreen = document.getElementById(screenId);
-        if(targetScreen) {
-            targetScreen.classList.add('active');
-        }
-        
-        let footer = document.getElementById('footer-brand-container');
-        if (screenId === 'screen-chats' || screenId === 'screen-chat' || screenId === 'screen-create-room' || screenId === 'screen-owner-panel' || screenId === 'screen-google-login' || screenId === 'screen-phone-login') {
-            footer.style.display = 'none';
-        } else {
-            footer.style.display = 'block';
-        }
-        closeGroupOptions();
-        
-        if(screenId === 'screen-chats') {
-            renderActiveChats();
-        }
-    }
+        // تهيئة Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
 
-    function toggleGroupOptions() {
-        if (!isUserLoggedIn) { alert('⚠️ التطبيق محمي! يرجى تسجيل الدخول أولاً.'); switchScreen('screen-login'); return; }
-        let modal = document.getElementById('group-options-modal');
-        modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
-    }
+        // --- دالة إنشاء حساب ---
+        window.registerUser = function() {
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const pass = document.getElementById('regPass').value;
+            const country = document.getElementById('regCountry').value.trim();
+            const age = document.getElementById('regAge').value.trim();
 
-    function closeGroupOptions() {
-        let modal = document.getElementById('group-options-modal');
-        if(modal) modal.style.display = 'none';
-    }
-
-    function changeLanguage(lang) {
-        if(lang === 'en') { alert('English language selected.'); }
-        else { alert('تم اختيار اللغة العربية.'); }
-    }
-
-    function openGoogleLogin() {
-        switchScreen('screen-google-login');
-    }
-
-    function verifyGoogleLogin() {
-        let gEmail = document.getElementById('google-email').value.trim();
-        let gPass = document.getElementById('google-pass').value.trim();
-        if(gEmail === '' || gPass === '') {
-            alert('⚠️ يرجى إدخال إيميل وكلمة مرور جوجل للربط والحماية.');
-            return;
-        }
-        currentUser = 'مستخدم جوجل (' + gEmail + ')';
-        isUserLoggedIn = true;
-        checkOwnerPanelAccess();
-        alert('✅ تم ربط حساب Google ودخول التطبيق بنجاح!');
-        switchScreen('screen-chats');
-        renderActiveChats();
-    }
-
-    function openPhoneLogin() {
-        switchScreen('screen-phone-login');
-    }
-
-    function sendSmsCode() {
-        let phone = document.getElementById('phone-number').value.trim();
-        if(phone === '' || phone.length < 9) {
-            alert('⚠️ يرجى إدخال رقم جوال صحيح ومكتمل.');
-            return;
-        }
-        generatedSmsCode = Math.floor(1000 + Math.random() * 9000).toString();
-        alert(`📨 تم إرسال رسالة نصية SMS إلى الرقم: ${phone}\n(كود التحقق الخاص بك هو: ${generatedSmsCode})`);
-    }
-
-    function verifyPhoneSms() {
-        let userEnteredCode = document.getElementById('phone-sms-code').value.trim();
-        if(userEnteredCode === '') {
-            alert('⚠️ يرجى إدخال كود التحقق المرسل.');
-            return;
-        }
-        if(userEnteredCode === generatedSmsCode) {
-            currentUser = 'مستخدم هاتف';
-            isUserLoggedIn = true;
-            checkOwnerPanelAccess();
-            alert('✅ تم التحقق من رقم الهاتف بنجاح وتم تسجيل الدخول!');
-            switchScreen('screen-chats');
-            renderActiveChats();
-        } else {
-            alert('❌ كود التحقق غير صحيح، يرجى إعادة المحاولة.');
-        }
-    }
-
-    function sendRecoveryCode() {
-        let email = document.getElementById('recovery-email').value.trim();
-        if(email === '') { alert('⚠️ يرجى إدخال إيميل الاستعادة.'); return; }
-        alert(`✅ تم إرسال كود التحقق بنجاح إلى البريد: ${email}\n(الكود التجريبي: 7762)`);
-    }
-
-    function verifyAndReset() {
-        let code = document.getElementById('verification-code').value.trim();
-        if(code === '7762') {
-            alert('✅ تم التحقق بنجاح! تم استعادة كلمة المرور بنجاح.');
-            switchScreen('screen-login');
-        } else {
-            alert('❌ كود التحقق غير صحيح.');
-        }
-    }
-
-    function openOwnerPanel() {
-        closeGroupOptions();
-        switchScreen('screen-owner-panel');
-        let container = document.getElementById('users-list-container');
-        let savedUsers = JSON.parse(localStorage.getItem('rima_registered_users')) || [];
-        
-        if(savedUsers.length === 0) {
-            container.innerHTML = `<p style="font-size:10px; color:#64748b; text-align:center;">لا توجد حسابات مسجلة بعد.</p>`;
-        } else {
-            container.innerHTML = `<h4 style="font-size:11px; margin-bottom:5px; color:#1e293b;">إجمالي المستخدمين: ${savedUsers.length}</h4>`;
-            savedUsers.forEach((u, index) => {
-                container.innerHTML += `
-                    <div style="background:#f1f5f9; padding:5px; margin-bottom:4px; border-radius:6px; font-size:9px; border:1px solid #cbd5e1;">
-                        <b>#${index+1} المستخدم:</b> ${u.username}<br>
-                        <b>كلمة المرور:</b> ${u.password}<br>
-                        <b>الإيميل:</b> ${u.email || 'bin2farea@gmail.com'}<br>
-                        <b>العمر:</b> ${u.age || '-'} | <b>الدولة:</b> ${u.country || '-'}<br>
-                        <b>الهدف:</b> ${u.goal || '-'}
-                    </div>`;
-            });
-        }
-    }
-
-    function checkOwnerPanelAccess() {
-        let ownerMenu = document.getElementById('owner-panel-menu');
-        if(currentUser === 'أبو جواس') {
-            ownerMenu.style.display = 'block';
-        } else {
-            ownerMenu.style.display = 'none';
-        }
-    }
-
-    function openRimaMainRoom() {
-        if (!isUserLoggedIn) { alert('⚠️ التطبيق محمي! يرجى تسجيل الدخول أو إنشاء حساب أولاً.'); switchScreen('screen-login'); return; }
-        closeGroupOptions();
-        enterChatRoom('شات ريمة الرسمي', false);
-    }
-
-    function openCreateRoomScreen(type) {
-        if (!isUserLoggedIn) { alert('⚠️ التطبيق محمي! يرجى تسجيل الدخول أو إنشاء حساب أولاً.'); switchScreen('screen-login'); return; }
-        closeGroupOptions();
-        switchScreen('screen-create-room');
-        document.getElementById('create-room-heading').innerText = 'إنشاء غرفة ' + type;
-        document.getElementById('new-room-name').value = '';
-    }
-
-    function toggleRoomPassField() {
-        let isChecked = document.getElementById('room-pass-toggle').checked;
-        document.getElementById('new-room-pass').style.display = isChecked ? 'block' : 'none';
-    }
-
-    function searchRooms() {
-        if (!isUserLoggedIn) { alert('⚠️ التطبيق محمي! يرجى تسجيل الدخول أو إنشاء حساب أولاً.'); switchScreen('screen-login'); return; }
-        closeGroupOptions();
-        let query = prompt('🔍 أدخل اسم الغرفة للبحث عنها:');
-        if (query) {
-            let found = activeChats.find(c => c.name.includes(query));
-            if (found) {
-                alert(`✅ تم العثور على الغرفة: ${found.name}`);
-                enterChatRoom(found.name, found.isPrivate);
-            } else {
-                alert('❌ لم يتم العثور على الغرفة.');
+            if (name === "" || name.includes(' ')) {
+                alert("الاسم مطلوب وبدون مسافات."); return;
             }
-        }
-    }
+            if (email === "" || pass === "" || country === "" || age === "") {
+                alert("الرجاء ملء جميع الحقول."); return;
+            }
+            if (pass.length < 6) {
+                alert("كلمة السر يجب أن تكون 6 حروف أو أرقام على الأقل."); return;
+            }
 
-    function submitCreateRoom() {
-        let roomName = document.getElementById('new-room-name').value.trim();
-        let isPriv = document.getElementById('room-pass-toggle').checked;
-
-        if (roomName === '') { alert('⚠️ يرجى إدخال اسم الغرفة.'); return; }
-
-        let newRoom = { name: roomName, desc: isPriv ? 'غرفة خاصة' : 'غرفة عامة', owner: currentUser, isPrivate: isPriv };
-        if (!activeChats.some(c => c.name === roomName)) {
-            activeChats.push(newRoom);
-            localStorage.setItem('rima_active_chats', JSON.stringify(activeChats));
-        }
-        renderActiveChats();
-        enterChatRoom(roomName, isPriv);
-    }
-
-    function renderActiveChats() {
-        let container = document.getElementById('active-chats-container');
-        if (!container) return;
-        if (activeChats.length === 0) {
-            container.innerHTML = `<p style="color: #64748b; font-size: 11px; text-align: center; margin-top: 20px;">لا توجد دردشات نشطة</p>`;
-        } else {
-            container.innerHTML = '';
-            activeChats.forEach(chat => {
-                container.innerHTML += `
-                    <div class="contact-item" onclick="enterChatRoom('${chat.name}', ${chat.isPrivate})">
-                        <div class="contact-left">
-                            <div class="contact-avatar">${chat.name.substring(0,2)}</div>
-                            <div class="contact-info">
-                                <h4>${chat.name}</h4>
-                                <p>${chat.desc} | ${chat.owner}</p>
-                            </div>
-                        </div>
-                        <button class="close-chat-btn" onclick="event.stopPropagation(); closeActiveChat('${chat.name}')">✕</button>
-                    </div>`;
+            createUserWithEmailAndPassword(auth, email, pass)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                set(ref(db, 'users/' + user.uid), {
+                    username: name,
+                    email: email,
+                    country: country,
+                    age: age,
+                    createdAt: Date.now()
+                }).then(() => {
+                    alert("تم إنشاء حسابك بنجاح!");
+                    showLogin();
+                });
+            })
+            .catch((error) => {
+                alert("خطأ: " + error.message);
             });
+        };
+
+        // --- دالة تسجيل الدخول ---
+        window.loginUser = function() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const pass = document.getElementById('loginPassword').value;
+
+            if (email === "" || pass === "") {
+                alert("الرجاء إدخال البريد وكلمة المرور."); return;
+            }
+
+            signInWithEmailAndPassword(auth, email, pass)
+            .then((userCredential) => {
+                document.getElementById('loginCard').style.display = 'none';
+                document.getElementById('chatScreen').style.display = 'flex';
+            })
+            .catch((error) => {
+                alert("خطأ في الدخول: تأكد من البريد وكلمة المرور.");
+            });
+        };
+
+        // --- دالة تسجيل الخروج ---
+        window.logoutUser = function() {
+            signOut(auth).then(() => {
+                document.getElementById('chatScreen').style.display = 'none';
+                document.getElementById('loginCard').style.display = 'flex';
+                document.getElementById('loginEmail').value = '';
+                document.getElementById('loginPassword').value = '';
+            });
+        };
+
+        // مراقبة حالة الدخول
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('loginCard').style.display = 'none';
+                document.getElementById('chatScreen').style.display = 'flex';
+                document.getElementById('welcomeUser').innerText = "أهلاً بك " + user.email + " 👑";
+            } else {
+                document.getElementById('loginCard').style.display = 'flex';
+                document.getElementById('chatScreen').style.display = 'none';
+            }
+        });
+
+        window.showRegister = function() {
+            document.getElementById('loginCard').style.display = 'none';
+            document.getElementById('registerCard').style.display = 'flex';
+        };
+        window.showLogin = function() {
+            document.getElementById('registerCard').style.display = 'none';
+            document.getElementById('loginCard').style.display = 'flex';
+        };
+
+        window.pressEffect = function(btn) {
+            btn.classList.add('btn-pressed');
+            setTimeout(function() {
+                btn.classList.remove('btn-pressed');
+            }, 400); 
         }
-    }
-
-    function closeActiveChat(roomName) {
-        activeChats = activeChats.filter(c => c.name !== roomName);
-        localStorage.setItem('rima_active_chats', JSON.stringify(activeChats));
-        renderActiveChats();
-    }
-
-    function enterChatRoom(roomName, isPrivate) {
-        if (!isUserLoggedIn) { alert('⚠️ التطبيق محمي! يرجى تسجيل الدخول أو إنشاء حساب أولاً.'); switchScreen('screen-login'); return; }
-        closeGroupOptions();
-        currentRoom = roomName; isPrivateChat = isPrivate;
-
-        switchScreen('screen-chat');
-        document.getElementById('chat-room-title').innerText = roomName;
-        let chatBox = document.getElementById('chat-box');
-        let savedHistory = localStorage.getItem('chat_history_' + roomName);
-        chatBox.innerHTML = savedHistory || `<div class="chat-bubble-other"><div style="font-size:8px; font-weight:bold; color:#1e293b;">النظام</div><div>مرحباً بك في ${roomName}</div></div>`;
-        let container = document.getElementById('chat-box-container');
-        container.scrollTop = container.scrollHeight;
-    }
-
-    function sendMessage() {
-        let input = document.getElementById('msg-input');
-        let chatBox = document.getElementById('chat-box');
-        let container = document.getElementById('chat-box-container');
-        
-        if(input.value.trim() !== '') {
-            let now = new Date();
-            let hours = now.getHours();
-            let minutes = now.getMinutes();
-            let ampm = hours >= 12 ? 'م' : 'ص';
-            hours = hours % 12;
-            hours = hours ? hours : 12;
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-            let timeString = hours + ':' + minutes + ' ' + ampm;
-
-            let checksHtml = isPrivateChat ? `<span class="whatsapp-checks">✓✓</span>` : '';
-            chatBox.innerHTML += `
-                <div class="chat-bubble-me">
-                    <div>${input.value}</div>
-                    <div style="display:flex; justify-content:space-between; font-size:8px; margin-top:2px; color:#3f6212;"><span>${timeString}</span>${checksHtml}</div>
-                </div>`;
-            input.value = '';
-            container.scrollTop = container.scrollHeight;
-            localStorage.setItem('chat_history_' + currentRoom, chatBox.innerHTML);
-        }
-    }
-
-    function registerNewAccount() {
-        let u = document.getElementById('reg-username').value.trim();
-        let p = document.getElementById('reg-password').value.trim();
-        let email = document.getElementById('reg-email').value.trim() || 'bin2farea@gmail.com';
-        let age = document.getElementById('reg-age').value.trim();
-        let country = document.getElementById('reg-country').value.trim();
-        let goal = document.getElementById('reg-goal').value.trim();
-
-        if(u === '' || p === '') { alert('⚠️ يرجى تعبئة اسم المستخدم وكلمة المرور.'); return; }
-
-        let savedUsers = JSON.parse(localStorage.getItem('rima_registered_users')) || [];
-        savedUsers.push({ username: u, password: p, email: email, age: age, country: country, goal: goal });
-        localStorage.setItem('rima_registered_users', JSON.stringify(savedUsers));
-        
-        alert('✅ تم إنشاء الحساب بنجاح!');
-        switchScreen('screen-login');
-    }
-
-    function login() {
-        let u = document.getElementById('username').value.trim();
-        let p = document.getElementById('password').value.trim();
-        
-        if (u === 'أبو جواس' && p === '776250') {
-            currentUser = 'أبو جواس'; 
-            isUserLoggedIn = true;
-            checkOwnerPanelAccess();
-            switchScreen('screen-chats'); 
-            renderActiveChats(); 
-            return;
-        }
-
-        let savedUsers = JSON.parse(localStorage.getItem('rima_registered_users')) || [];
-        let matched = savedUsers.find(user => user.username === u && user.password === p);
-        if (matched) {
-            currentUser = u; 
-            isUserLoggedIn = true;
-            checkOwnerPanelAccess();
-            switchScreen('screen-chats'); 
-            renderActiveChats();
-        } else {
-            alert('❌ خطأ في اسم المستخدم أو كلمة المرور، أو أن التطبيق محمي ويجب التسجيل أولاً.');
-        }
-    }
-</script>
-
+    </script>
 </body>
 </html>
