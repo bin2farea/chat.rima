@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
     <title>شات ريمه - أبو جواس</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -23,13 +23,7 @@
             --text-dark: #2d3748;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Cairo', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
 
         body {
             background: var(--card-bg);
@@ -42,25 +36,8 @@
             overflow: hidden; 
         }
 
-        .phone-container {
-            position: relative;
-            width: 100%;
-            max-width: 100%;
-            height: 100vh;
-            height: 100dvh;
-            background: var(--card-bg); 
-            overflow: hidden;
-        }
-
-        .phone-inner {
-            background: var(--card-bg);
-            position: relative;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            height: 100%; 
-            overflow: hidden;
-        }
+        .phone-container { position: relative; width: 100%; max-width: 100%; height: 100vh; height: 100dvh; background: var(--card-bg); overflow: hidden; }
+        .phone-inner { background: var(--card-bg); position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; overflow: hidden; }
 
         #loadingScreen { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--card-bg); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; gap: 15px; }
         .spinner { width: 40px; height: 40px; border: 4px solid rgba(255, 153, 0, 0.2); border-top: 4px solid var(--gold-border); border-radius: 50%; animation: spin 1s linear infinite; }
@@ -77,9 +54,7 @@
         
         .top-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .top-avatar { width: 35px; height: 35px; border-radius: 50%; background: var(--btn-blue-light); border: 1px solid var(--gold-border); display: flex; justify-content: center; align-items: center; color: var(--gold-border); overflow: hidden; }
-        .top-avatar img { width: 100%; height: 100%; object-fit: cover; }
         .top-name { color: var(--text-main); font-size: 14px; font-weight: 700; }
-        
         .menu-toggle { color: var(--gold-border); font-size: 22px; cursor: pointer; }
 
         .app-section { flex: 1; overflow-y: auto; display: flex; flex-direction: column; color: var(--text-dark); background: var(--bg-light); position: relative; }
@@ -95,14 +70,14 @@
         .chat-avatar-wrapper { position: relative; margin-left: 12px; flex-shrink: 0; }
         .chat-avatar { width: 45px; height: 45px; border-radius: 50%; background: #e2e8f0; display: flex; justify-content: center; align-items: center; color: #4a5568; font-weight: bold; font-size: 18px; }
         
-        .status-dot { position: absolute; bottom: 0; left: 0; width: 13px; height: 13px; border-radius: 50%; border: 2px solid #fff; }
-        .status-dot.online { background-color: var(--success); }
-        .status-dot.offline { background-color: #cbd5e1; }
+        .status-dot { position: absolute; bottom: 0; left: 0; width: 13px; height: 13px; border-radius: 50%; border: 2px solid #fff; background-color: #cbd5e1; }
+        .status-dot.active-room { background-color: var(--success); }
 
         .chat-info { display: flex; flex-direction: column; flex: 1; }
-        .chat-name-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
         .chat-name { font-size: 14px; font-weight: 700; color: #2d3748; }
+        .chat-last-msg { font-size: 11px; color: #718096; }
 
+        /* الشريط السفلي الأصلي المطور */
         .bottom-nav {
             display: none; justify-content: space-around; align-items: center;
             background: #050a17; border-top: 1px solid var(--gold-border);
@@ -132,9 +107,7 @@
         .room-chat-input input { flex: 1; padding: 10px 15px; border: 1px solid #cbd5e1; border-radius: 20px; outline: none; font-size: 12px; }
         .room-chat-input button { background: var(--card-bg); color: var(--gold-border); border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; justify-content: center; align-items: center; }
 
-        #loginCard, #registerCard {
-            padding: 20px; display: flex; flex-direction: column; width: 100%; height: 100%; background: var(--card-bg);
-        }
+        #loginCard, #registerCard { padding: 20px; display: flex; flex-direction: column; width: 100%; height: 100%; background: var(--card-bg); }
         #registerCard { display: none; }
         .title-container { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-top: 20px; margin-bottom: 15px; width: 100%; }
         .title-row { display: flex; justify-content: space-between; width: 100%; gap: 6px; }
@@ -195,7 +168,18 @@
         .modal-header { background: var(--btn-blue-dark); padding: 15px; border-bottom: 1px solid var(--gold-border); text-align: center; }
         .modal-header h3 { color: var(--gold-border); font-size: 16px; }
         .modal-body { padding: 15px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
-        .create-room-btn { background: var(--gold-border); color: #000; border: none; border-radius: 10px; padding: 10px; font-weight: bold; font-size: 13px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .create-room-btn { background: var(--gold-border); color: #000; border: none; border-radius: 10px; padding: 10px; font-weight: bold; font-size: 13px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; flex-shrink: 0; }
+        .rooms-list-modal { max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+
+        .toggle-group-create { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: var(--btn-blue-light); border-radius: 8px; border: 1px solid #334155; margin-bottom: 8px;}
+        .toggle-group-create span { font-size: 12px; color: var(--text-main); }
+        .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #64748b; transition: .4s; border-radius: 22px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--gold-border); }
+        input:checked + .slider:before { transform: translateX(18px); }
+        #passGroup, #passGroupConfirm { display: none; }
     </style>
 </head>
 <body>
@@ -208,6 +192,7 @@
                 <div class="loading-text" id="loadingText">جاري التحقق...</div>
             </div>
 
+            <!-- شاشة تسجيل الدخول -->
             <div id="loginCard">
                 <div class="title-container">
                     <div class="title-row">
@@ -239,6 +224,7 @@
                 </div>
             </div>
 
+            <!-- شاشة التسجيل -->
             <div id="registerCard">
                 <div class="title-container">
                     <div class="title-row">
@@ -256,6 +242,7 @@
                 </div>
             </div>
 
+            <!-- الشاشة الرئيسية للتطبيق -->
             <div id="mainApp">
                 <div class="top-nav">
                     <div class="top-profile" onclick="openSideMenu()">
@@ -271,12 +258,32 @@
                     </div>
                 </div>
 
+                <!-- الشريط السفلي الأصلي المعتمد -->
                 <div class="bottom-nav" id="bottomNav" style="display: flex;">
-                    <div class="nav-item active"><i class="fas fa-comment-dots"></i><span>دردشة</span></div>
-                    <div class="nav-item" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i><span>خروج</span></div>
+                    <div class="nav-item active" onclick="switchTab('chats')"><i class="fas fa-comment-dots"></i><span>دردشة</span></div>
+                    <div class="nav-item" onclick="switchTab('contacts')"><i class="fas fa-user-friends"></i><span>أصدقاء</span></div>
+                    <div class="nav-item" onclick="switchTab('dialer')"><i class="fas fa-phone"></i><span>اتصال</span></div>
+                    <div class="nav-item" onclick="openRoomsModal()"><i class="fas fa-comments"></i><span>غرف الدردشه</span></div>
+                    <div class="nav-item" onclick="switchTab('more')"><i class="fas fa-ellipsis-h"></i><span>المزيد</span></div>
                 </div>
             </div>
 
+            <!-- غرفة الدردشة الداخلية -->
+            <div id="roomChatPage">
+                <div class="room-chat-header">
+                    <h2 id="currentRoomName">اسم الغرفة</h2>
+                    <div class="chat-controls">
+                        <button class="close" onclick="closeRoomChat()"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="room-chat-messages" id="roomChatMessages"></div>
+                <div class="room-chat-input">
+                    <input type="text" id="roomMsgInput" placeholder="اكتب رسالتك..." onkeypress="handleRoomMsgKeyPress(event)">
+                    <button type="button" onclick="sendRoomMessage()"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+
+            <!-- القائمة الجانبية -->
             <div id="menuOverlay" onclick="closeSideMenu()"></div>
             <div id="sideMenu">
                 <div class="side-menu-header">
@@ -287,17 +294,96 @@
                     </div>
                 </div>
                 <div class="side-menu-list">
+                    <div class="menu-item-side" onclick="openPage('accountPage'); closeSideMenu();"><i class="fas fa-key"></i> الحساب</div>
                     <div class="menu-item-side" onclick="logoutUser()"><i class="fas fa-sign-out-alt" style="color:var(--danger)"></i> تسجيل الخروج</div>
+                </div>
+            </div>
+
+            <!-- صفحة الحساب -->
+            <div id="accountPage" class="full-page">
+                <div class="page-header">
+                    <button onclick="closePage('accountPage')"><i class="fas fa-arrow-right"></i></button>
+                    <h2>الحساب</h2>
+                </div>
+                <div class="page-content">
+                    <div class="input-group" style="margin-bottom:15px;">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="editProfileName" placeholder="اسمك" style="background:var(--btn-blue-light); color:#fff;">
+                    </div>
+                    <button class="btn-main" onclick="saveProfileChanges()">حفظ التعديلات <i class="fas fa-save"></i></button>
+                </div>
+            </div>
+
+            <!-- نافذة الغرف المتاحة -->
+            <div id="roomsModal" class="modal-overlay">
+                <div class="modal-box">
+                    <div class="modal-header">
+                        <h3>الغرف المتاحة</h3>
+                    </div>
+                    <div class="modal-body">
+                        <button class="create-room-btn" onclick="openCreateRoomModal()">
+                            <i class="fas fa-plus"></i> إنشاء غرفة جديدة
+                        </button>
+                        <div id="roomListContainer" class="rooms-list-modal"></div>
+                        <button class="btn-main" style="margin-top:15px; background:transparent; border:1px solid var(--gold-border); color:#fff;" onclick="document.getElementById('roomsModal').style.display='none'">إغلاق</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- نافذة إنشاء غرفة بجميع خياراتها الأصلية -->
+            <div id="createRoomModal" class="modal-overlay">
+                <div class="modal-box">
+                    <div class="modal-header">
+                        <h3>إنشاء غرفة جديدة</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group">
+                            <i class="fas fa-comments"></i>
+                            <input type="text" id="newRoomName" placeholder="اسم الغرفة">
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-users"></i>
+                            <input type="number" id="newRoomMax" placeholder="عدد الزوار (الحد الأقصى)" value="25">
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-globe"></i>
+                            <input type="text" id="newRoomCountry" placeholder="الدولة">
+                        </div>
+
+                        <div class="toggle-group-create">
+                            <span>إخفاء الغرفة من البحث</span>
+                            <label class="switch"><input type="checkbox" id="hideFromSearch"><span class="slider"></span></label>
+                        </div>
+                        
+                        <div class="toggle-group-create">
+                            <span>غرفة خاصة (رمز سري)</span>
+                            <label class="switch"><input type="checkbox" id="isPrivateRoom" onchange="togglePassVisibility()"><span class="slider"></span></label>
+                        </div>
+
+                        <div class="input-group" id="passGroup">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="newRoomPass" placeholder="الرمز السري للغرفة">
+                        </div>
+                        
+                        <div class="input-group" id="passGroupConfirm">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="newRoomPassConfirm" placeholder="تأكيد الرمز السري">
+                        </div>
+
+                        <button class="btn-main" style="margin-top:15px;" onclick="submitNewRoom()">تأكيد الإنشاء <i class="fas fa-check"></i></button>
+                        <button class="btn-secondary" style="background:transparent;" onclick="document.getElementById('createRoomModal').style.display='none'">إلغاء</button>
+                    </div>
                 </div>
             </div>
 
         </div>
     </div>
 
+    <!-- سكربت التشغيل وتاكيد الاستجابة -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserSessionPersistence, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getDatabase, ref, set, get, update, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+        import { getDatabase, ref, set, get, update, push, onValue, remove, off } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDRRdm1GjZZBCumw2_w2X7ZUMkb6q1LvrU",
@@ -312,6 +398,11 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getDatabase(app);
+
+        let currentRoomId = null;
+        let currentUserData = null;
+        let activeMessagesRef = null;
+        let activeRooms = JSON.parse(localStorage.getItem('activeRooms') || '{}');
 
         setPersistence(auth, browserSessionPersistence).catch((error) => console.log(error));
 
@@ -328,10 +419,7 @@
             showLoading("جاري الدخول...");
             signInWithEmailAndPassword(auth, email, password)
                 .then(() => hideLoading())
-                .catch(err => { 
-                    hideLoading(); 
-                    alert("خطأ في الدخول: تأكد من البريد وكلمة المرور"); 
-                });
+                .catch(err => { hideLoading(); alert("خطأ في الدخول: تأكد من البريد وكلمة المرور"); });
         }
 
         window.resetAccountPassword = function() {
@@ -370,6 +458,7 @@
                 document.getElementById('registerCard').style.display = 'none';
                 document.getElementById('mainApp').style.display = 'flex';
                 loadUserProfile(user);
+                loadRoomsList();
             } else {
                 document.getElementById('mainApp').style.display = 'none';
                 document.getElementById('loginCard').style.display = 'flex';
@@ -380,16 +469,181 @@
             get(ref(db, 'users/' + user.uid)).then((snapshot) => {
                 let displayName = "";
                 if (snapshot.exists()) {
-                    displayName = snapshot.val().name; 
+                    currentUserData = snapshot.val();
+                    displayName = currentUserData.name; 
                 }
                 if(!displayName) displayName = user.email.split('@')[0];
                 document.getElementById('topUserName').innerText = displayName;
                 document.getElementById('sideMenuName').innerText = displayName;
+                document.getElementById('editProfileName').value = displayName;
             });
         }
 
         window.openSideMenu = function() { document.getElementById('sideMenu').classList.add('open'); document.getElementById('menuOverlay').style.display = 'block'; }
         window.closeSideMenu = function() { document.getElementById('sideMenu').classList.remove('open'); document.getElementById('menuOverlay').style.display = 'none'; }
+        window.openPage = function(pageId) { document.getElementById(pageId).style.display = 'flex'; }
+        window.closePage = function(pageId) { document.getElementById(pageId).style.display = 'none'; }
+
+        window.saveProfileChanges = function() {
+            const newName = document.getElementById('editProfileName').value.trim();
+            if(!newName) return alert("الاسم مطلوب");
+            showLoading("جاري الحفظ...");
+            update(ref(db, 'users/' + auth.currentUser.uid), { name: newName }).then(() => {
+                hideLoading();
+                document.getElementById('topUserName').innerText = newName; 
+                document.getElementById('sideMenuName').innerText = newName;
+                alert("تم الحفظ بنجاح!");
+            });
+        }
+
+        window.openRoomsModal = function() {
+            document.getElementById('roomsModal').style.display = 'flex';
+        }
+
+        window.openCreateRoomModal = function() {
+            document.getElementById('roomsModal').style.display = 'none';
+            document.getElementById('createRoomModal').style.display = 'flex';
+        }
+
+        window.togglePassVisibility = function() {
+            const isChecked = document.getElementById('isPrivateRoom').checked;
+            document.getElementById('passGroup').style.display = isChecked ? 'block' : 'none';
+            document.getElementById('passGroupConfirm').style.display = isChecked ? 'block' : 'none';
+        }
+
+        window.submitNewRoom = function() {
+            const roomName = document.getElementById('newRoomName').value.trim();
+            const maxUsers = document.getElementById('newRoomMax').value;
+            const country = document.getElementById('newRoomCountry').value.trim();
+            const hideSearch = document.getElementById('hideFromSearch').checked;
+            const isPrivate = document.getElementById('isPrivateRoom').checked;
+            const pass = document.getElementById('newRoomPass').value;
+            const passConfirm = document.getElementById('newRoomPassConfirm').value;
+
+            if(!roomName) return alert("أدخل اسم الغرفة");
+            if(isPrivate) {
+                if(!pass) return alert("الرجاء إدخال الرمز السري للغرفة");
+                if(pass !== passConfirm) return alert("كلمتا السر غير متطابقتين");
+            }
+
+            const newRoomRef = push(ref(db, 'rooms'));
+            set(newRoomRef, {
+                name: roomName,
+                maxUsers: maxUsers || 25,
+                country: country || 'عام',
+                settings: {
+                    hideFromSearch: hideSearch,
+                    isPrivate: isPrivate,
+                    password: pass || ''
+                },
+                createdBy: auth.currentUser.uid,
+                createdAt: Date.now()
+            }).then(() => {
+                document.getElementById('newRoomName').value = '';
+                document.getElementById('newRoomMax').value = '25';
+                document.getElementById('newRoomCountry').value = '';
+                document.getElementById('createRoomModal').style.display = 'none';
+                alert("✅ تم إنشاء الغرفة بنجاح!");
+            });
+        }
+
+        function loadRoomsList() {
+            const roomsRef = ref(db, 'rooms');
+            onValue(roomsRef, (snapshot) => {
+                const container = document.getElementById('roomListContainer');
+                container.innerHTML = '';
+                if(snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const roomId = childSnapshot.key;
+                        const roomData = childSnapshot.val();
+                        
+                        const isActive = activeRooms[roomId] === true;
+                        const dotClass = isActive ? 'status-dot active-room' : 'status-dot';
+                        const countryText = roomData.country ? `الدولة: ${roomData.country}` : '';
+                        const privateSign = roomData.settings && roomData.settings.isPrivate ? ' 🔒' : '';
+
+                        container.innerHTML += `
+                            <div class="chat-list-item" onclick="enterRoom('${roomId}', '${roomData.name}')">
+                                <div class="chat-avatar-wrapper">
+                                    <div class="chat-avatar">${roomData.name.substring(0, 2)}</div>
+                                    <div class="${dotClass}"></div>
+                                </div>
+                                <div class="chat-info">
+                                    <div class="chat-name">${roomData.name}${privateSign}</div>
+                                    <div class="chat-last-msg">${countryText} - انقر للدخول</div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    container.innerHTML = '<div style="text-align:center; color:#94a3b8; padding:20px;">لا توجد غرف متاحة حالياً</div>';
+                }
+            });
+        }
+
+        window.enterRoom = function(roomId, roomName) {
+            currentRoomId = roomId;
+            activeRooms[roomId] = true;
+            localStorage.setItem('activeRooms', JSON.stringify(activeRooms));
+            
+            document.getElementById('roomsModal').style.display = 'none';
+            document.getElementById('currentRoomName').innerText = roomName;
+            document.getElementById('roomChatPage').style.display = 'flex';
+            
+            const messagesContainer = document.getElementById('roomChatMessages');
+            messagesContainer.innerHTML = '';
+
+            if(activeMessagesRef) off(activeMessagesRef);
+            activeMessagesRef = ref(db, 'roomMessages/' + roomId);
+            
+            onValue(activeMessagesRef, (snapshot) => {
+                messagesContainer.innerHTML = '';
+                if(snapshot.exists()) {
+                    snapshot.forEach((child) => {
+                        const msg = child.val();
+                        const isMy = msg.senderId === auth.currentUser.uid;
+                        messagesContainer.innerHTML += `
+                            <div class="msg-bubble ${isMy ? 'my-msg' : ''}">
+                                <span style="font-size:10px; color:${isMy ? '#000' : '#718096'}; display:block; font-weight:bold;">${msg.senderName}</span>
+                                ${msg.text}
+                            </div>
+                        `;
+                    });
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+            });
+        }
+
+        window.closeRoomChat = function() {
+            document.getElementById('roomChatPage').style.display = 'none';
+            currentRoomId = null;
+            if(activeMessagesRef) off(activeMessagesRef);
+            loadRoomsList();
+        }
+
+        window.sendRoomMessage = function() {
+            const input = document.getElementById('roomMsgInput');
+            const text = input.value.trim();
+            if(!text || !currentRoomId) return;
+
+            const messagesRef = ref(db, 'roomMessages/' + currentRoomId);
+            push(messagesRef, {
+                text: text,
+                senderId: auth.currentUser.uid,
+                senderName: currentUserData ? currentUserData.name : 'مستخدم',
+                timestamp: Date.now()
+            });
+            input.value = '';
+        }
+
+        window.handleRoomMsgKeyPress = function(e) {
+            if(e.key === 'Enter') sendRoomMessage();
+        }
+
+        window.switchTab = function(tabName) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
     </script>
 </body>
 </html>
