@@ -23,21 +23,46 @@
             --text-dark: #2d3748;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
         body {
             background: var(--card-bg);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
             height: 100dvh;
             width: 100vw;
             overflow: hidden; 
         }
 
-        .phone-container { position: relative; width: 100%; max-width: 100%; height: 100vh; height: 100dvh; background: var(--card-bg); overflow: hidden; }
-        .phone-inner { background: var(--card-bg); position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+        .phone-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 0; 
+            border-radius: 0; 
+            background: var(--card-bg); 
+            height: 100dvh; 
+            overflow: hidden;
+        }
+
+        .phone-inner {
+            background: var(--card-bg);
+            border-radius: 0; 
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%; 
+            overflow: hidden;
+        }
 
         #loadingScreen { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--card-bg); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; gap: 15px; }
         .spinner { width: 40px; height: 40px; border: 4px solid rgba(255, 153, 0, 0.2); border-top: 4px solid var(--gold-border); border-radius: 50%; animation: spin 1s linear infinite; }
@@ -54,7 +79,9 @@
         
         .top-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .top-avatar { width: 35px; height: 35px; border-radius: 50%; background: var(--btn-blue-light); border: 1px solid var(--gold-border); display: flex; justify-content: center; align-items: center; color: var(--gold-border); overflow: hidden; }
+        .top-avatar img { width: 100%; height: 100%; object-fit: cover; }
         .top-name { color: var(--text-main); font-size: 14px; font-weight: 700; }
+        
         .menu-toggle { color: var(--gold-border); font-size: 22px; cursor: pointer; }
 
         .app-section { flex: 1; overflow-y: auto; display: flex; flex-direction: column; color: var(--text-dark); background: var(--bg-light); position: relative; }
@@ -67,25 +94,48 @@
         }
         .chat-list-item:active { background: #f8fafc; }
         
-        .chat-avatar-wrapper { position: relative; margin-left: 12px; flex-shrink: 0; }
-        .chat-avatar { width: 45px; height: 45px; border-radius: 50%; background: #e2e8f0; display: flex; justify-content: center; align-items: center; color: #4a5568; font-weight: bold; font-size: 18px; }
+        .chat-avatar-wrapper {
+            position: relative;
+            margin-left: 12px;
+            flex-shrink: 0;
+        }
+
+        .chat-avatar {
+            width: 45px; height: 45px; border-radius: 50%;
+            background: #e2e8f0; display: flex; justify-content: center; align-items: center;
+            color: #4a5568; font-weight: bold; font-size: 18px;
+        }
         
-        .status-dot { position: absolute; bottom: 0; left: 0; width: 13px; height: 13px; border-radius: 50%; border: 2px solid #fff; background-color: #cbd5e1; }
-        .status-dot.active-room { background-color: var(--success); }
+        .status-dot { position: absolute; bottom: 0; left: 0; width: 13px; height: 13px; border-radius: 50%; border: 2px solid #fff; }
+        .status-dot.online { background-color: var(--success); }
+        .status-dot.offline { background-color: #cbd5e1; }
 
         .chat-info { display: flex; flex-direction: column; flex: 1; }
+        .chat-name-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
         .chat-name { font-size: 14px; font-weight: 700; color: #2d3748; }
-        .chat-last-msg { font-size: 11px; color: #718096; }
+        
+        .delete-chat-btn {
+            background: transparent;
+            border: none;
+            color: #cbd5e1;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 5px;
+            transition: color 0.2s;
+        }
+        .delete-chat-btn:hover { color: var(--danger); }
 
-        /* الشريط السفلي الأصلي المطور */
+        .chat-last-msg { font-size: 11px; color: #718096; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+
         .bottom-nav {
             display: none; justify-content: space-around; align-items: center;
             background: #050a17; border-top: 1px solid var(--gold-border);
             padding: 8px 0; width: 100%; flex-shrink: 0; 
         }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--text-sub); cursor: pointer; font-size: 9px; font-weight: 700; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--text-sub); cursor: pointer; font-size: 9px; font-weight: 700; transition: all 0.2s; }
         .nav-item i { font-size: 18px; }
         .nav-item.active { color: var(--gold-border); }
+        .nav-item.active i { filter: drop-shadow(0 0 5px var(--gold-glow)); }
 
         #roomChatPage {
             display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -96,66 +146,124 @@
             padding: 10px 15px; background: var(--card-bg); color: white;
             border-bottom: 1px solid var(--gold-border); flex-shrink: 0; position: relative;
         }
+        
+        .room-header-right {
+            display: flex; align-items: center; gap: 10px; position: relative; cursor: pointer;
+        }
+        .room-header-avatar-wrap {
+            position: relative; width: 35px; height: 35px;
+        }
+        .room-header-avatar {
+            width: 35px; height: 35px; border-radius: 50%;
+            background: var(--btn-blue-light); border: 1px solid var(--gold-border);
+            display: flex; justify-content: center; align-items: center; color: var(--gold-border);
+            font-size: 14px; font-weight: bold; overflow: hidden;
+        }
+        .room-header-status-dot {
+            position: absolute; bottom: 0; left: 0; width: 10px; height: 10px;
+            border-radius: 50%; border: 2px solid var(--card-bg);
+        }
+        .room-header-status-dot.online { background-color: var(--success); }
+        .room-header-status-dot.offline { background-color: #cbd5e1; }
+
         .room-chat-header h2 { font-size: 14px; font-weight: 700; color: var(--gold-border); }
         .chat-controls button { background: transparent; border: none; color: white; font-size: 18px; cursor: pointer; }
 
-        .room-chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .msg-bubble { background: #ffffff; padding: 8px 12px; border-radius: 15px; max-width: 80%; align-self: flex-start; font-size: 13px; color: #2d3748; }
-        .msg-bubble.my-msg { background: var(--gold-border); color: #000; align-self: flex-end; }
+        .room-dropdown-menu {
+            display: none; position: absolute; top: 55px; right: 15px;
+            background: var(--card-bg); border: 1px solid var(--gold-border);
+            border-radius: 12px; width: 220px; box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+            z-index: 110; flex-direction: column; overflow: hidden;
+        }
+        .room-dropdown-item {
+            padding: 12px 15px; color: var(--text-main); font-size: 12px; font-weight: 600;
+            display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.08);
+            cursor: pointer; transition: background 0.2s;
+        }
+        .room-dropdown-item:active { background: var(--btn-blue-light); }
+        .room-dropdown-item i { color: var(--gold-border); width: 18px; text-align: center; }
+        .room-dropdown-item.danger { color: var(--danger); }
+        .room-dropdown-item.danger i { color: var(--danger); }
 
-        .room-chat-input { display: flex; padding: 10px; background: #ffffff; border-top: 1px solid #e2e8f0; gap: 10px; flex-shrink: 0; }
+        #chatErrorBanner {
+            display: none; background-color: #ef4444; color: white; padding: 8px; 
+            text-align: center; font-size: 11px; font-weight: bold; 
+            flex-shrink: 0; z-index: 1000;
+        }
+
+        .room-chat-messages {
+            flex: 1; overflow-y: auto; padding: 15px;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .msg-bubble {
+            background: #ffffff; padding: 8px 12px; border-radius: 15px;
+            max-width: 80%; align-self: flex-start; font-size: 13px; color: #2d3748; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .msg-bubble.my-msg { background: var(--gold-border); color: #000; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .msg-bubble.other-msg { border-bottom-left-radius: 2px; }
+        .msg-sender { font-size: 10px; color: #718096; margin-bottom: 2px; display: block; }
+
+        .room-chat-input {
+            display: flex; padding: 10px; background: #ffffff;
+            border-top: 1px solid #e2e8f0; gap: 10px; flex-shrink: 0;
+            position: relative; z-index: 10;
+        }
         .room-chat-input input { flex: 1; padding: 10px 15px; border: 1px solid #cbd5e1; border-radius: 20px; outline: none; font-size: 12px; }
-        .room-chat-input button { background: var(--card-bg); color: var(--gold-border); border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+        .room-chat-input button { background: var(--card-bg); color: var(--gold-border); border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 16px; }
 
-        #loginCard, #registerCard { padding: 20px; display: flex; flex-direction: column; width: 100%; height: 100%; background: var(--card-bg); }
+        #loginCard, #registerCard {
+            padding: 20px; display: flex; flex-direction: column; width: 100%; height: 100%; background: var(--card-bg);
+        }
         #registerCard { display: none; }
         .title-container { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-top: 20px; margin-bottom: 15px; width: 100%; }
         .title-row { display: flex; justify-content: space-between; width: 100%; gap: 6px; }
-        .glass-box { height: 32px; display: flex; justify-content: center; align-items: center; background: linear-gradient(180deg, var(--btn-blue-light) 0%, var(--btn-blue-dark) 100%); border: 1px solid var(--gold-border); box-shadow: 3px 3px 8px rgba(0,0,0,0.8); }
+        .glass-box { height: 32px; display: flex; justify-content: center; align-items: center; background: linear-gradient(180deg, var(--btn-blue-light) 0%, var(--btn-blue-dark) 100%); border: 1px solid var(--gold-border); box-shadow: 3px 3px 8px rgba(0,0,0,0.8), -1px -1px 3px rgba(255,255,255,0.1), 0 0 8px var(--gold-glow); }
         .box-chat { flex: 1; border-radius: 20px 5px 20px 20px; }
         .box-dardasha { flex: 1; border-radius: 5px 20px 20px 20px; }
         .box-reema { width: 80%; border-radius: 20px 20px 20px 5px; }
-        .app-title { font-family: 'Amiri', serif; font-size: 14px; font-weight: 700; color: #ffffff; display: flex; align-items: center; justify-content: center; height: 100%; }
+        .app-title { font-family: 'Amiri', serif; font-size: 14px; font-weight: 700; color: #ffffff; margin: 0; line-height: 1; display: flex; align-items: center; justify-content: center; height: 100%; }
         .title-reema { font-size: 16px; letter-spacing: 1px; }
         
-        .top-icon { width: 65px; height: 65px; border-radius: 50%; background: var(--card-bg); margin: 0 auto 20px; display: flex; justify-content: center; align-items: center; border: 2px solid var(--gold-border); font-size: 28px; color: var(--gold-border); }
+        .top-icon { width: 65px; height: 65px; border-radius: 50%; background: var(--card-bg); margin: 0 auto 20px; display: flex; justify-content: center; align-items: center; border: 2px solid var(--gold-border); box-shadow: 0 15px 25px rgba(0,0,0,0.9), 0 0 15px var(--gold-glow), inset 0 3px 8px rgba(255,255,255,0.4), inset 0 -3px 8px rgba(0,0,0,0.6); font-size: 28px; color: var(--gold-border); }
         
         .bottom-section { margin-top: auto; display: flex; flex-direction: column; width: 100%; padding-bottom: 10px; }
         .input-group { position: relative; margin-bottom: 10px; } 
         .input-group i { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--gold-border); font-size: 12px; z-index: 2; }
-        .input-group input { width: 100%; height: 38px; padding: 0 35px 0 12px; border-radius: 15px 5px 15px 5px; background: linear-gradient(180deg, var(--btn-blue-light) 0%, var(--btn-blue-dark) 100%); color: white; font-size: 12px; font-weight: 700; border: 1px solid var(--gold-border); outline: none; }
-        .input-group input::placeholder { color: #94a3b8; font-weight: 600; font-size: 11px; }
+        .input-group input { width: 100%; height: 34px; padding: 0 35px 0 12px; border-radius: 15px 5px 15px 5px; background: linear-gradient(180deg, var(--btn-blue-light) 0%, var(--btn-blue-dark) 100%); color: white; font-size: 11px; font-weight: 700; border: 1px solid var(--gold-border); box-shadow: 3px 3px 8px rgba(0,0,0,0.7), -1px -1px 4px rgba(255,255,255,0.1); outline: none; }
+        .input-group input::placeholder { color: #94a3b8; font-weight: 600; font-size: 10px; }
         
-        .options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 10px; color: var(--text-sub); }
+        .options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 9px; color: var(--text-sub); }
         .forgot-pass { color: #60a5fa; text-decoration: none; font-weight: 600; cursor: pointer; }
 
-        .btn-main, .btn-secondary { width: 100%; height: 40px; border-radius: 15px 5px 15px 5px; background: linear-gradient(180deg, #1a2f66 0%, var(--btn-blue-dark) 100%); color: white; font-size: 13px; font-weight: 900; cursor: pointer; margin-bottom: 8px; display: flex; justify-content: center; align-items: center; gap: 6px; border: 1px solid var(--gold-border); }
-        .btn-main:active, .btn-secondary:active { transform: scale(0.98); opacity: 0.9; }
+        .btn-main, .btn-secondary { width: 100%; height: 34px; border-radius: 15px 5px 15px 5px; background: linear-gradient(180deg, #1a2f66 0%, var(--btn-blue-dark) 100%); color: white; font-size: 12px; font-weight: 900; cursor: pointer; margin-bottom: 8px; display: flex; justify-content: center; align-items: center; gap: 6px; border: 1px solid var(--gold-border); box-shadow: 0 10px 15px rgba(0,0,0,0.6), 0 4px 0 #02050d, 0 0 10px var(--gold-glow), inset 0 2px 5px rgba(255,255,255,0.3); transition: all 0.1s ease; }
         .btn-main i { color: var(--gold-border); font-size: 13px; }
-        .btn-secondary { height: 35px; font-size: 11px; }
+        .btn-secondary { height: 30px; font-size: 10px; }
         
         .bottom-texts { display: flex; flex-direction: column; align-items: center; margin-top: 10px; }
-        .bottom-dua { color: #a78bfa; font-size: 10px; font-weight: 700; margin: 0 0 3px 0; }
-        .developer-name { font-size: 9px; color: var(--text-sub); font-weight: 600; margin: 0; }
+        .bottom-dua { color: #a78bfa; font-size: 10px; font-weight: 700; margin: 0 0 3px 0; line-height: 1.1; }
+        .developer-name { font-size: 9px; color: var(--text-sub); font-weight: 600; margin: 0; line-height: 1.1; }
         .developer-name span { color: var(--gold-border); font-weight: bold; }
         .divider { display: flex; align-items: center; text-align: center; color: var(--text-sub); font-size: 8px; margin: 5px 0; font-weight: 600; width: 100%; }
         .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .divider span { padding: 0 5px; }
-        .phone-number { display: flex; justify-content: center; align-items: center; gap: 4px; font-size: 9px; font-weight: 700; color: var(--text-main); direction: ltr; text-decoration: none; }
+        .phone-number { display: flex; justify-content: center; align-items: center; gap: 4px; font-size: 9px; font-weight: 700; color: var(--text-main); margin: 0; direction: ltr; text-decoration: none; line-height: 1.1; }
         .whatsapp-icon { color: #25D366; font-size: 11px; }
 
+        #menuOverlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 40; backdrop-filter: blur(2px); }
         #sideMenu { position: absolute; top: 0; right: -100%; width: 80%; height: 100%; background: #ffffff; z-index: 50; transition: right 0.3s ease; display: flex; flex-direction: column; box-shadow: -5px 0 15px rgba(0,0,0,0.8); }
         #sideMenu.open { right: 0; }
-        #menuOverlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 40; }
         
         .side-menu-header { background: var(--card-bg); padding: 20px; display: flex; align-items: center; gap: 12px; border-bottom: 2px solid var(--gold-border); }
         .side-menu-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--btn-blue-light); border: 2px solid var(--gold-border); display: flex; justify-content: center; align-items: center; font-size: 24px; color: var(--gold-border); overflow: hidden; }
+        .side-menu-avatar img { width: 100%; height: 100%; object-fit: cover; }
         .side-menu-info h3 { color: var(--text-main); font-size: 16px; margin-bottom: 2px; }
         .side-menu-info p { color: var(--text-sub); font-size: 11px; }
         
         .side-menu-list { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; padding-bottom: 20px; }
-        .menu-item-side { display: flex; align-items: center; gap: 15px; padding: 15px 20px; color: #2d3748; font-size: 13px; font-weight: 600; border-bottom: 1px solid #e2e8f0; cursor: pointer; }
+        .menu-item-side { display: flex; align-items: center; gap: 15px; padding: 15px 20px; color: #2d3748; font-size: 13px; font-weight: 600; border-bottom: 1px solid #e2e8f0; cursor: pointer; transition: background 0.2s; }
+        .menu-item-side:active { background: #f8fafc; }
         .menu-item-side i { font-size: 18px; width: 25px; text-align: center; color: var(--gold-border); }
+        .section-title { font-size: 10px; color: #a0aec0; padding: 10px 20px 5px; font-weight: bold; background: #f8fafc; }
 
         .full-page { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--card-bg); z-index: 60; flex-direction: column; }
         .page-header { display: flex; align-items: center; gap: 10px; padding: 15px; border-bottom: 1px solid var(--gold-border); background: var(--btn-blue-dark); flex-shrink: 0; }
@@ -163,23 +271,35 @@
         .page-header h2 { color: var(--text-main); font-size: 16px; }
         .page-content { padding: 20px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; }
 
-        .modal-overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 90; justify-content: center; align-items: center; }
-        .modal-box { background: var(--card-bg); width: 90%; max-width: 320px; border-radius: 15px; border: 1px solid var(--gold-border); display: flex; flex-direction: column; overflow: hidden; max-height: 85vh; }
-        .modal-header { background: var(--btn-blue-dark); padding: 15px; border-bottom: 1px solid var(--gold-border); text-align: center; }
-        .modal-header h3 { color: var(--gold-border); font-size: 16px; }
-        .modal-body { padding: 15px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
-        .create-room-btn { background: var(--gold-border); color: #000; border: none; border-radius: 10px; padding: 10px; font-weight: bold; font-size: 13px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; flex-shrink: 0; }
-        .rooms-list-modal { max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-
-        .toggle-group-create { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: var(--btn-blue-light); border-radius: 8px; border: 1px solid #334155; margin-bottom: 8px;}
-        .toggle-group-create span { font-size: 12px; color: var(--text-main); }
+        .toggle-row { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--btn-blue-light); border-radius: 10px; margin-bottom: 10px; border: 1px solid #334155; }
+        .toggle-row span { font-size: 13px; color: var(--text-main); }
         .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #64748b; transition: .4s; border-radius: 22px; }
         .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--gold-border); }
         input:checked + .slider:before { transform: translateX(18px); }
-        #passGroup, #passGroupConfirm { display: none; }
+
+        .ringtone-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--btn-blue-light); border-radius: 10px; border: 1px solid #334155; cursor: pointer; margin-bottom: 10px; }
+        .ringtone-item.selected { border-color: var(--gold-border); background: rgba(255, 153, 0, 0.1); }
+        .ringtone-name { color: var(--text-main); font-size: 13px; }
+
+        .modal-overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 90; justify-content: center; align-items: center; }
+        .modal-box { background: var(--card-bg); width: 90%; max-width: 320px; border-radius: 15px; border: 1px solid var(--gold-border); display: flex; flex-direction: column; overflow: hidden; max-height: 85dvh; }
+        .modal-header { background: var(--btn-blue-dark); padding: 15px; border-bottom: 1px solid var(--gold-border); text-align: center; flex-shrink: 0; }
+        .modal-header h3 { color: var(--gold-border); font-size: 16px; }
+        .modal-body { padding: 15px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+        
+        .create-room-btn { background: var(--gold-border); color: #000; border: none; border-radius: 10px; padding: 10px; font-weight: bold; font-size: 13px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 10px; flex-shrink: 0;}
+        
+        .rooms-list-modal { max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; }
+        .rooms-list-modal::-webkit-scrollbar { width: 4px; }
+        .rooms-list-modal::-webkit-scrollbar-thumb { background: var(--gold-border); border-radius: 4px; }
+
+        .toggle-group-create { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: var(--btn-blue-light); border-radius: 8px; border: 1px solid #334155; margin-bottom: 8px;}
+        .toggle-group-create span { font-size: 12px; color: var(--text-main); }
+        
+        #passGroup, #passGroupConfirm, #roomRecoveryEmailGroup { display: none; }
     </style>
 </head>
 <body>
@@ -192,7 +312,6 @@
                 <div class="loading-text" id="loadingText">جاري التحقق...</div>
             </div>
 
-            <!-- شاشة تسجيل الدخول -->
             <div id="loginCard">
                 <div class="title-container">
                     <div class="title-row">
@@ -224,7 +343,6 @@
                 </div>
             </div>
 
-            <!-- شاشة التسجيل -->
             <div id="registerCard">
                 <div class="title-container">
                     <div class="title-row">
@@ -242,7 +360,6 @@
                 </div>
             </div>
 
-            <!-- الشاشة الرئيسية للتطبيق -->
             <div id="mainApp">
                 <div class="top-nav">
                     <div class="top-profile" onclick="openSideMenu()">
@@ -257,9 +374,11 @@
                         <div class="empty-state">لا توجد محادثات حالياً...</div>
                     </div>
                 </div>
+                <div id="section-contacts" class="app-section" style="display: none;"><div class="empty-state">لا يوجد أصدقاء...</div></div>
+                <div id="section-dialer" class="app-section" style="display: none;"><div class="empty-state">لوحة الاتصال...</div></div>
+                <div id="section-more" class="app-section" style="display: none;"></div>
 
-                <!-- الشريط السفلي الأصلي المعتمد -->
-                <div class="bottom-nav" id="bottomNav" style="display: flex;">
+                <div class="bottom-nav" id="bottomNav">
                     <div class="nav-item active" onclick="switchTab('chats')"><i class="fas fa-comment-dots"></i><span>دردشة</span></div>
                     <div class="nav-item" onclick="switchTab('contacts')"><i class="fas fa-user-friends"></i><span>أصدقاء</span></div>
                     <div class="nav-item" onclick="switchTab('dialer')"><i class="fas fa-phone"></i><span>اتصال</span></div>
@@ -268,22 +387,36 @@
                 </div>
             </div>
 
-            <!-- غرفة الدردشة الداخلية -->
             <div id="roomChatPage">
                 <div class="room-chat-header">
-                    <h2 id="currentRoomName">اسم الغرفة</h2>
+                    <div class="room-header-right" onclick="toggleRoomDropdown(event)">
+                        <div class="room-header-avatar-wrap">
+                            <div class="room-header-avatar" id="roomHeaderAvatar"><i class="fas fa-comments"></i></div>
+                            <div class="room-header-status-dot online" id="roomHeaderStatusDot"></div>
+                        </div>
+                        <h2 id="currentRoomName">اسم الغرفة</h2>
+                    </div>
+
+                    <div class="room-dropdown-menu" id="roomDropdownMenu">
+                        <div class="room-dropdown-item" onclick="showRoomMembers()"><i class="fas fa-users"></i> الأعضاء الموجودين</div>
+                        <div class="room-dropdown-item" onclick="showRoomSettings()"><i class="fas fa-cog"></i> الضبط والإعدادات</div>
+                        <div class="room-dropdown-item danger" onclick="leaveRoom()"><i class="fas fa-sign-out-alt"></i> ترك الغرفة</div>
+                    </div>
+
                     <div class="chat-controls">
                         <button class="close" onclick="closeRoomChat()"><i class="fas fa-times"></i></button>
                     </div>
                 </div>
+                
+                <div id="chatErrorBanner"></div>
+
                 <div class="room-chat-messages" id="roomChatMessages"></div>
-                <div class="room-chat-input">
+                <div class="room-chat-input" id="roomChatInputArea">
                     <input type="text" id="roomMsgInput" placeholder="اكتب رسالتك..." onkeypress="handleRoomMsgKeyPress(event)">
                     <button type="button" onclick="sendRoomMessage()"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
 
-            <!-- القائمة الجانبية -->
             <div id="menuOverlay" onclick="closeSideMenu()"></div>
             <div id="sideMenu">
                 <div class="side-menu-header">
@@ -293,13 +426,26 @@
                         <p>أهلاً بك</p>
                     </div>
                 </div>
+                
                 <div class="side-menu-list">
+                    <div class="menu-item-side" onclick="alert('قريباً')"><i class="fas fa-star"></i> الاشتراكات</div>
+                    <div class="menu-item-side" onclick="alert('قريباً')"><i class="fas fa-laptop"></i> الأجهزة المرتبطة</div>
                     <div class="menu-item-side" onclick="openPage('accountPage'); closeSideMenu();"><i class="fas fa-key"></i> الحساب</div>
+                    <div class="menu-item-side" onclick="openPage('privacyPage'); closeSideMenu();"><i class="fas fa-lock"></i> الخصوصية</div>
+                    <div class="menu-item-side" onclick="alert('قريباً')"><i class="fas fa-list"></i> القوائم</div>
+                    <div class="menu-item-side" onclick="alert('قريباً')"><i class="fas fa-comment"></i> الدردشات</div>
+                    <div class="menu-item-side" onclick="alert('قريباً')"><i class="fas fa-palette"></i> الشكل</div>
+                    <div class="menu-item-side" onclick="openPage('notificationsPage'); closeSideMenu();"><i class="fas fa-bell"></i> الإشعارات</div>
+                    <div class="menu-item-side" onclick="alert('قريباً')"><i class="fas fa-database"></i> التخزين والبيانات</div>
+                    <div class="menu-item-side" onclick="alert('قريباً')"><i class="fas fa-universal-access"></i> الوصول</div>
+                    <div class="menu-item-side" onclick="alert('لغة التطبيق: العربية')"><i class="fas fa-globe"></i> لغة التطبيق</div>
+                    <div class="menu-item-side" onclick="window.open('https://wa.me/967776250412', '_blank')"><i class="fas fa-question-circle"></i> المساعدة والملاحظات</div>
+                    
+                    <div class="section-title">خيارات أخرى</div>
                     <div class="menu-item-side" onclick="logoutUser()"><i class="fas fa-sign-out-alt" style="color:var(--danger)"></i> تسجيل الخروج</div>
                 </div>
             </div>
 
-            <!-- صفحة الحساب -->
             <div id="accountPage" class="full-page">
                 <div class="page-header">
                     <button onclick="closePage('accountPage')"><i class="fas fa-arrow-right"></i></button>
@@ -310,11 +456,58 @@
                         <i class="fas fa-user"></i>
                         <input type="text" id="editProfileName" placeholder="اسمك" style="background:var(--btn-blue-light); color:#fff;">
                     </div>
+                    <div class="input-group" style="margin-bottom:15px;">
+                        <i class="fas fa-envelope-open-text"></i>
+                        <input type="email" id="editRecoveryEmail" placeholder="إيميل الاسترداد (لحسابك)" style="background:var(--btn-blue-light); color:#fff;">
+                    </div>
                     <button class="btn-main" onclick="saveProfileChanges()">حفظ التعديلات <i class="fas fa-save"></i></button>
                 </div>
             </div>
 
-            <!-- نافذة الغرف المتاحة -->
+            <div id="privacyPage" class="full-page">
+                <div class="page-header">
+                    <button onclick="closePage('privacyPage')"><i class="fas fa-arrow-right"></i></button>
+                    <h2>الخصوصية</h2>
+                </div>
+                <div class="page-content">
+                    <div class="toggle-row">
+                        <span>آخر ظهور</span>
+                        <label class="switch"><input type="checkbox" id="privacyLastSeen" checked onchange="savePrivacySetting('lastSeen', this.checked)"><span class="slider"></span></label>
+                    </div>
+                    <div class="toggle-row">
+                        <span>صورة الملف الشخصي</span>
+                        <label class="switch"><input type="checkbox" id="privacyProfilePic" checked onchange="savePrivacySetting('profilePic', this.checked)"><span class="slider"></span></label>
+                    </div>
+                    <div class="toggle-row">
+                        <span>إشعارات القراءة</span>
+                        <label class="switch"><input type="checkbox" id="privacyReadReceipts" checked onchange="savePrivacySetting('readReceipts', this.checked)"><span class="slider"></span></label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="notificationsPage" class="full-page">
+                <div class="page-header">
+                    <button onclick="closePage('notificationsPage')"><i class="fas fa-arrow-right"></i></button>
+                    <h2>الإشعارات</h2>
+                </div>
+                <div class="page-content">
+                    <h4 style="color:var(--text-main); margin-bottom:15px;">نغمات التنبيه</h4>
+                    <div class="ringtone-item selected" onclick="selectRingtone(this)">
+                        <span class="ringtone-name">نغمة ريمة الرسمية</span>
+                        <i class="fas fa-check-circle" style="color:var(--gold-border);"></i>
+                    </div>
+                    <div class="ringtone-item" onclick="selectRingtone(this)">
+                        <span class="ringtone-name">صوت تنبيه 1</span>
+                    </div>
+                    <div class="ringtone-item" onclick="selectRingtone(this)">
+                        <span class="ringtone-name">صوت تنبيه 2</span>
+                    </div>
+                    <div class="ringtone-item" onclick="selectRingtone(this)">
+                        <span class="ringtone-name">صامت</span>
+                    </div>
+                </div>
+            </div>
+
             <div id="roomsModal" class="modal-overlay">
                 <div class="modal-box">
                     <div class="modal-header">
@@ -330,7 +523,6 @@
                 </div>
             </div>
 
-            <!-- نافذة إنشاء غرفة بجميع خياراتها الأصلية -->
             <div id="createRoomModal" class="modal-overlay">
                 <div class="modal-box">
                     <div class="modal-header">
@@ -370,8 +562,45 @@
                             <input type="password" id="newRoomPassConfirm" placeholder="تأكيد الرمز السري">
                         </div>
 
+                        <div class="input-group" id="roomRecoveryEmailGroup">
+                            <i class="fas fa-envelope-open-text"></i>
+                            <input type="email" id="newRoomRecoveryEmail" placeholder="إيميل استرداد رمز الغرفة">
+                        </div>
+
                         <button class="btn-main" style="margin-top:15px;" onclick="submitNewRoom()">تأكيد الإنشاء <i class="fas fa-check"></i></button>
                         <button class="btn-secondary" style="background:transparent;" onclick="document.getElementById('createRoomModal').style.display='none'">إلغاء</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="roomAuthModal" class="modal-overlay">
+                <div class="modal-box">
+                    <div class="modal-header">
+                        <h3>الغرفة الخاصة</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div id="roomPassStep">
+                            <div class="input-group" style="margin-bottom:10px;">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="enterRoomPass" placeholder="أدخل الرمز السري">
+                            </div>
+                            <button class="btn-main" onclick="verifyRoomPass()">دخول الغرفة <i class="fas fa-sign-in-alt"></i></button>
+                            <button class="btn-secondary" style="background:transparent; color:var(--text-sub); border:none;" onclick="openRoomPassReset()">نسيت الرمز السري؟</button>
+                        </div>
+
+                        <div id="roomResetStep" style="display: none;">
+                            <p style="color: var(--text-main); font-size: 11px; text-align: center; margin-bottom: 10px;">سيتم إرسال كود مكون من 6 أرقام إلى إيميل الاسترداد الخاص بالغرفة.</p>
+                            <button class="btn-main" style="background: var(--gold-border); color: #000;" onclick="sendResetCode()">إرسال الكود <i class="fas fa-paper-plane"></i></button>
+                            
+                            <div id="codeInputArea" style="display: none; margin-top: 10px;">
+                                <div class="input-group">
+                                    <i class="fas fa-key"></i>
+                                    <input type="text" id="recoveryCodeInput" placeholder="أدخل الكود المكون من 6 أرقام">
+                                </div>
+                                <button class="btn-main" onclick="verifyResetCode()">تأكيد الكود <i class="fas fa-check"></i></button>
+                            </div>
+                            <button class="btn-secondary" style="background:transparent; color:var(--text-sub); border:none;" onclick="closeRoomAuthModal()">إلغاء</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -379,11 +608,11 @@
         </div>
     </div>
 
-    <!-- سكربت التشغيل وتاكيد الاستجابة -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserSessionPersistence, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getDatabase, ref, set, get, update, push, onValue, remove, off } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDRRdm1GjZZBCumw2_w2X7ZUMkb6q1LvrU",
@@ -392,22 +621,36 @@
             projectId: "chatrima",
             storageBucket: "chatrima.appspot.com",
             messagingSenderId: "1015405153719",
-            appId: "1:1015405153719:web:68e090063d02b6622a2c32"
+            appId: "1:1015405153719:web:68e090063d02b6622a2c32",
+            measurementId: "G-KDBBTEPHJ5"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getDatabase(app);
+        const storage = getStorage(app);
 
         let currentRoomId = null;
         let currentUserData = null;
+        let allRooms = {}; 
+        let targetRoomIdForRecovery = null;
+        let generatedResetCode = null;
         let activeMessagesRef = null;
-        let activeRooms = JSON.parse(localStorage.getItem('activeRooms') || '{}');
+        let leftRooms = JSON.parse(sessionStorage.getItem('leftRooms') || '{}');
 
         setPersistence(auth, browserSessionPersistence).catch((error) => console.log(error));
 
         function showLoading(text) { document.getElementById('loadingScreen').style.display = 'flex'; document.getElementById('loadingText').innerText = text; }
         function hideLoading() { document.getElementById('loadingScreen').style.display = 'none'; }
+
+        function showErrorBanner(msg) {
+            const banner = document.getElementById('chatErrorBanner');
+            if(banner) {
+                banner.innerText = msg;
+                banner.style.display = 'block';
+                setTimeout(() => { banner.style.display = 'none'; }, 4000);
+            }
+        }
 
         window.showRegister = function() { document.getElementById('loginCard').style.display = 'none'; document.getElementById('registerCard').style.display = 'flex'; }
         window.showLogin = function() { document.getElementById('registerCard').style.display = 'none'; document.getElementById('loginCard').style.display = 'flex'; }
@@ -419,16 +662,26 @@
             showLoading("جاري الدخول...");
             signInWithEmailAndPassword(auth, email, password)
                 .then(() => hideLoading())
-                .catch(err => { hideLoading(); alert("خطأ في الدخول: تأكد من البريد وكلمة المرور"); });
+                .catch(err => { 
+                    hideLoading(); 
+                    alert("خطأ في الدخول: " + err.message); 
+                });
         }
 
         window.resetAccountPassword = function() {
             const email = document.getElementById('loginEmail').value.trim();
-            if(!email) return alert("الرجاء كتابة بريدك الإلكتروني في خانة البريد أولاً.");
-            showLoading("جاري الإرسال...");
+            if(!email) return alert("الرجاء كتابة بريدك الإلكتروني في خانة البريد أولاً، ثم اضغط على نسيت كلمة المرور.");
+            
+            showLoading("جاري إرسال رابط الاستعادة...");
             sendPasswordResetEmail(auth, email)
-                .then(() => { hideLoading(); alert("✅ تم إرسال رابط استعادة كلمة المرور إلى بريدك."); })
-                .catch((error) => { hideLoading(); alert("خطأ: " + error.message); });
+                .then(() => {
+                    hideLoading();
+                    alert("✅ تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني.");
+                })
+                .catch((error) => {
+                    hideLoading();
+                    alert("خطأ: " + error.message);
+                });
         }
 
         window.registerUser = function() {
@@ -439,7 +692,7 @@
             showLoading("جاري التسجيل...");
             createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
                 set(ref(db, 'users/' + userCredential.user.uid), { 
-                    name: name, email: email, status: 'online'
+                    name: name, email: email, status: 'online', privacy: { lastSeen: true, profilePic: true, readReceipts: true }
                 }).then(() => hideLoading());
             }).catch(err => { hideLoading(); alert(err.message); });
         }
@@ -457,10 +710,12 @@
                 document.getElementById('loginCard').style.display = 'none';
                 document.getElementById('registerCard').style.display = 'none';
                 document.getElementById('mainApp').style.display = 'flex';
+                document.getElementById('bottomNav').style.display = 'flex';
                 loadUserProfile(user);
-                loadRoomsList();
+                loadRooms();
             } else {
                 document.getElementById('mainApp').style.display = 'none';
+                document.getElementById('bottomNav').style.display = 'none';
                 document.getElementById('loginCard').style.display = 'flex';
             }
         });
@@ -471,179 +726,83 @@
                 if (snapshot.exists()) {
                     currentUserData = snapshot.val();
                     displayName = currentUserData.name; 
+                    
+                    if(currentUserData.avatar) {
+                        document.getElementById('topAvatar').innerHTML = `<img src="${currentUserData.avatar}">`;
+                        document.getElementById('sideMenuAvatar').innerHTML = `<img src="${currentUserData.avatar}">`;
+                    }
+                    if(currentUserData.privacy) {
+                        document.getElementById('privacyLastSeen').checked = currentUserData.privacy.lastSeen;
+                        document.getElementById('privacyProfilePic').checked = currentUserData.privacy.profilePic;
+                        document.getElementById('privacyReadReceipts').checked = currentUserData.privacy.readReceipts;
+                    }
                 }
                 if(!displayName) displayName = user.email.split('@')[0];
+                
                 document.getElementById('topUserName').innerText = displayName;
                 document.getElementById('sideMenuName').innerText = displayName;
                 document.getElementById('editProfileName').value = displayName;
+                document.getElementById('editRecoveryEmail').value = currentUserData.recoveryEmail || "";
             });
         }
 
         window.openSideMenu = function() { document.getElementById('sideMenu').classList.add('open'); document.getElementById('menuOverlay').style.display = 'block'; }
         window.closeSideMenu = function() { document.getElementById('sideMenu').classList.remove('open'); document.getElementById('menuOverlay').style.display = 'none'; }
+
         window.openPage = function(pageId) { document.getElementById(pageId).style.display = 'flex'; }
         window.closePage = function(pageId) { document.getElementById(pageId).style.display = 'none'; }
 
         window.saveProfileChanges = function() {
             const newName = document.getElementById('editProfileName').value.trim();
+            const recEmail = document.getElementById('editRecoveryEmail').value.trim();
+            
             if(!newName) return alert("الاسم مطلوب");
+            
             showLoading("جاري الحفظ...");
-            update(ref(db, 'users/' + auth.currentUser.uid), { name: newName }).then(() => {
+            update(ref(db, 'users/' + auth.currentUser.uid), { 
+                name: newName,
+                recoveryEmail: recEmail 
+            }).then(() => {
                 hideLoading();
                 document.getElementById('topUserName').innerText = newName; 
                 document.getElementById('sideMenuName').innerText = newName;
-                alert("تم الحفظ بنجاح!");
+                alert("تم حفظ التعديلات بنجاح!");
             });
         }
 
-        window.openRoomsModal = function() {
-            document.getElementById('roomsModal').style.display = 'flex';
+        window.savePrivacySetting = function(key, value) {
+            update(ref(db, 'users/' + auth.currentUser.uid + '/privacy'), { [key]: value });
         }
 
-        window.openCreateRoomModal = function() {
-            document.getElementById('roomsModal').style.display = 'none';
-            document.getElementById('createRoomModal').style.display = 'flex';
-        }
-
-        window.togglePassVisibility = function() {
-            const isChecked = document.getElementById('isPrivateRoom').checked;
-            document.getElementById('passGroup').style.display = isChecked ? 'block' : 'none';
-            document.getElementById('passGroupConfirm').style.display = isChecked ? 'block' : 'none';
-        }
-
-        window.submitNewRoom = function() {
-            const roomName = document.getElementById('newRoomName').value.trim();
-            const maxUsers = document.getElementById('newRoomMax').value;
-            const country = document.getElementById('newRoomCountry').value.trim();
-            const hideSearch = document.getElementById('hideFromSearch').checked;
-            const isPrivate = document.getElementById('isPrivateRoom').checked;
-            const pass = document.getElementById('newRoomPass').value;
-            const passConfirm = document.getElementById('newRoomPassConfirm').value;
-
-            if(!roomName) return alert("أدخل اسم الغرفة");
-            if(isPrivate) {
-                if(!pass) return alert("الرجاء إدخال الرمز السري للغرفة");
-                if(pass !== passConfirm) return alert("كلمتا السر غير متطابقتين");
-            }
-
-            const newRoomRef = push(ref(db, 'rooms'));
-            set(newRoomRef, {
-                name: roomName,
-                maxUsers: maxUsers || 25,
-                country: country || 'عام',
-                settings: {
-                    hideFromSearch: hideSearch,
-                    isPrivate: isPrivate,
-                    password: pass || ''
-                },
-                createdBy: auth.currentUser.uid,
-                createdAt: Date.now()
-            }).then(() => {
-                document.getElementById('newRoomName').value = '';
-                document.getElementById('newRoomMax').value = '25';
-                document.getElementById('newRoomCountry').value = '';
-                document.getElementById('createRoomModal').style.display = 'none';
-                alert("✅ تم إنشاء الغرفة بنجاح!");
+        window.selectRingtone = function(element) {
+            document.querySelectorAll('.ringtone-item').forEach(el => {
+                el.classList.remove('selected');
+                el.innerHTML = el.innerHTML.replace('<i class="fas fa-check-circle" style="color:var(--gold-border);"></i>', '');
             });
+            element.classList.add('selected');
+            element.innerHTML += ' <i class="fas fa-check-circle" style="color:var(--gold-border);"></i>';
         }
 
-        function loadRoomsList() {
+        function loadRooms() {
             const roomsRef = ref(db, 'rooms');
             onValue(roomsRef, (snapshot) => {
-                const container = document.getElementById('roomListContainer');
-                container.innerHTML = '';
-                if(snapshot.exists()) {
-                    snapshot.forEach((childSnapshot) => {
-                        const roomId = childSnapshot.key;
-                        const roomData = childSnapshot.val();
-                        
-                        const isActive = activeRooms[roomId] === true;
-                        const dotClass = isActive ? 'status-dot active-room' : 'status-dot';
-                        const countryText = roomData.country ? `الدولة: ${roomData.country}` : '';
-                        const privateSign = roomData.settings && roomData.settings.isPrivate ? ' 🔒' : '';
+                allRooms = snapshot.val() || {};
+                const roomListContainer = document.getElementById('roomListContainer');
+                const mainChatList = document.getElementById('mainChatList');
+                roomListContainer.innerHTML = '';
+                mainChatList.innerHTML = '';
 
-                        container.innerHTML += `
-                            <div class="chat-list-item" onclick="enterRoom('${roomId}', '${roomData.name}')">
-                                <div class="chat-avatar-wrapper">
-                                    <div class="chat-avatar">${roomData.name.substring(0, 2)}</div>
-                                    <div class="${dotClass}"></div>
-                                </div>
-                                <div class="chat-info">
-                                    <div class="chat-name">${roomData.name}${privateSign}</div>
-                                    <div class="chat-last-msg">${countryText} - انقر للدخول</div>
-                                </div>
-                            </div>
-                        `;
-                    });
-                } else {
-                    container.innerHTML = '<div style="text-align:center; color:#94a3b8; padding:20px;">لا توجد غرف متاحة حالياً</div>';
-                }
-            });
-        }
+                if (snapshot.exists()) {
+                    for (const roomId in allRooms) {
+                        const room = allRooms[roomId];
+                        const avatarText = room.name.substring(0, 2);
+                        const privateIcon = room.settings && room.settings.isPrivate ? ' 🔒' : '';
+                        const countryText = room.settings && room.settings.country ? room.settings.country : 'اضغط للدخول...';
 
-        window.enterRoom = function(roomId, roomName) {
-            currentRoomId = roomId;
-            activeRooms[roomId] = true;
-            localStorage.setItem('activeRooms', JSON.stringify(activeRooms));
-            
-            document.getElementById('roomsModal').style.display = 'none';
-            document.getElementById('currentRoomName').innerText = roomName;
-            document.getElementById('roomChatPage').style.display = 'flex';
-            
-            const messagesContainer = document.getElementById('roomChatMessages');
-            messagesContainer.innerHTML = '';
+                        const isLeft = leftRooms[roomId] === true;
+                        const statusDotClass = isLeft ? 'status-dot offline' : 'status-dot online';
 
-            if(activeMessagesRef) off(activeMessagesRef);
-            activeMessagesRef = ref(db, 'roomMessages/' + roomId);
-            
-            onValue(activeMessagesRef, (snapshot) => {
-                messagesContainer.innerHTML = '';
-                if(snapshot.exists()) {
-                    snapshot.forEach((child) => {
-                        const msg = child.val();
-                        const isMy = msg.senderId === auth.currentUser.uid;
-                        messagesContainer.innerHTML += `
-                            <div class="msg-bubble ${isMy ? 'my-msg' : ''}">
-                                <span style="font-size:10px; color:${isMy ? '#000' : '#718096'}; display:block; font-weight:bold;">${msg.senderName}</span>
-                                ${msg.text}
-                            </div>
-                        `;
-                    });
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                }
-            });
-        }
-
-        window.closeRoomChat = function() {
-            document.getElementById('roomChatPage').style.display = 'none';
-            currentRoomId = null;
-            if(activeMessagesRef) off(activeMessagesRef);
-            loadRoomsList();
-        }
-
-        window.sendRoomMessage = function() {
-            const input = document.getElementById('roomMsgInput');
-            const text = input.value.trim();
-            if(!text || !currentRoomId) return;
-
-            const messagesRef = ref(db, 'roomMessages/' + currentRoomId);
-            push(messagesRef, {
-                text: text,
-                senderId: auth.currentUser.uid,
-                senderName: currentUserData ? currentUserData.name : 'مستخدم',
-                timestamp: Date.now()
-            });
-            input.value = '';
-        }
-
-        window.handleRoomMsgKeyPress = function(e) {
-            if(e.key === 'Enter') sendRoomMessage();
-        }
-
-        window.switchTab = function(tabName) {
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-        }
-    </script>
-</body>
-</html>
+                        const roomHTML = `
+                            <div class="chat-list-item">
+                                <div class="chat-avatar-wrapper" onclick="enterRoom('${roomId}')">
+                                    <div class="chat-avatar" sty
