@@ -805,4 +805,315 @@
                         const roomHTML = `
                             <div class="chat-list-item">
                                 <div class="chat-avatar-wrapper" onclick="enterRoom('${roomId}')">
-                                    <div class="chat-avatar" sty
+                                    <div class="chat-avatar" style="background: var(--gold-border); color: #000;">${avatarText}</div>
+                                    <div class="${statusDotClass}"></div>
+                                </div>
+                                <div class="chat-info" onclick="enterRoom('${roomId}')">
+                                    <div class="chat-name-row">
+                                        <span class="chat-name">${room.name}${privateIcon}</span>
+                                    </div>
+                                    <span class="chat-last-msg">${countryText}</span>
+                                </div>
+                                <button class="delete-chat-btn" onclick="deleteRoom('${roomId}', event)" title="حذف الغرفة"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        `;
+                        roomListContainer.insertAdjacentHTML('beforeend', roomHTML);
+                        mainChatList.insertAdjacentHTML('beforeend', roomHTML);
+                    }
+                } else {
+                    mainChatList.innerHTML = '<div class="empty-state">لا توجد غرف حالياً...</div>';
+                }
+            });
+        }
+
+        window.deleteRoom = function(roomId, event) {
+            event.stopPropagation();
+            if (confirm("هل أنت متأكد من حذف هذه الغرفة والدردشة الخاصة بها؟")) {
+                showLoading("جاري الحذف...");
+                remove(ref(db, 'rooms/' + roomId)).then(() => {
+                    remove(ref(db, 'roomMessages/' + roomId)).then(() => {
+                        hideLoading();
+                        alert("✅ تم حذف الغرفة بنجاح");
+                    });
+                }).catch((err) => {
+                    hideLoading();
+                    alert("خطأ أثناء الحذف: " + err.message);
+                });
+            }
+        };
+
+        window.openRoomsModal = function() { document.getElementById('roomsModal').style.display = 'flex'; }
+
+        window.openCreateRoomModal = function() {
+            document.getElementById('roomsModal').style.display = 'none';
+            document.getElementById('createRoomModal').style.display = 'flex';
+        }
+
+        window.togglePassVisibility = function() {
+            const isPrivate = document.getElementById('isPrivateRoom').checked;
+            const passGroup = document.getElementById('passGroup');
+            const passGroupConfirm = document.getElementById('passGroupConfirm');
+            const roomRecoveryEmailGroup = document.getElementById('roomRecoveryEmailGroup');
+            
+            if(isPrivate) {
+                passGroup.style.display = 'block';
+                passGroupConfirm.style.display = 'block';
+                roomRecoveryEmailGroup.style.display = 'block';
+            } else {
+                passGroup.style.display = 'none';
+                passGroupConfirm.style.display = 'none';
+                roomRecoveryEmailGroup.style.display = 'none';
+                document.getElementById('newRoomPass').value = '';
+                document.getElementById('newRoomPassConfirm').value = '';
+                document.getElementById('newRoomRecoveryEmail').value = '';
+            }
+        }
+
+        window.submitNewRoom = function() {
+            const roomName = document.getElementById('newRoomName').value.trim();
+            const roomMax = document.getElementById('newRoomMax').value.trim() || "25";
+            const roomCountry = document.getElementById('newRoomCountry').value.trim();
+            const hideFromSearch = document.getElementById('hideFromSearch').checked;
+            const isPrivate = document.getElementById('isPrivateRoom').checked;
+            const roomPass = document.getElementById('newRoomPass').value;
+            const roomPassConfirm = document.getElementById('newRoomPassConfirm').value;
+            const roomRecoveryEmail = document.getElementById('newRoomRecoveryEmail').value.trim();
+
+            if (roomName === "") { alert("الرجاء إدخال اسم الغرفة."); return; }
+            if (isPrivate) {
+                if (roomPass === "") { alert("الرجاء إدخال الرمز السري."); return; }
+                if (roomPass !== roomPassConfirm) { alert("الرمز السري وتأكيده غير متطابقين!"); return; }
+                if (roomRecoveryEmail === "") { alert("الرجاء إدخال إيميل استرداد رمز الغرفة."); return; }
+            }
+
+            showLoading("جاري إنشاء الغرفة...");
+
+            const newRoomRef = push(ref(db, 'rooms'));
+            set(newRoomRef, {
+                name: roomName, 
+                maxUsers: roomMax, 
+                createdBy: auth.currentUser.uid, 
+                createdAt: Date.now(),
+                status: 'active',
+                settings: {
+                    country: roomCountry,
+                    password: isPrivate ? roomPass : null,
+                    isPrivate: isPrivate,
+                    hideFromSearch: hideFromSearch,
+                    recoveryEmail: isPrivate ? roomRecoveryEmail : null
+                }
+            }).then(() => {
+                hideLoading();
+                document.getElementById('createRoomModal').style.display = 'none';
+                alert("✅ تم إنشاء الغرفة بنجاح!");
+            }).catch(err => {
+                hideLoading();
+                alert("خطأ: " + err.message);
+            });
+        };
+
+        window.enterRoom = function(roomId) {
+            const room = allRooms[roomId];
+            if (!room) return;
+            
+            if (room.settings && room.settings.isPrivate) {
+                targetRoomIdForRecovery = roomId;
+                document.getElementById('roomsModal').style.display = 'none';
+                document.getElementById('roomAuthModal').style.display = 'flex';
+                document.getElementById('enterRoomPass').value = '';
+                document.getElementById('roomPassStep').style.display = 'block';
+                document.getElementById('roomResetStep').style.display = 'none';
+                currentRoomId = roomId;
+            } else {
+                openChatRoomDirect(roomId, room.name);
+            }
+        };
+
+        window.verifyRoomPass = function() {
+            const enteredPass = document.getElementById('enterRoomPass').value;
+            const room = allRooms[currentRoomId];
+            if (room && room.settings && room.settings.password === enteredPass) {
+                document.getElementById('roomAuthModal').style.display = 'none';
+                openChatRoomDirect(currentRoomId, room.name);
+            } else {
+                alert("❌ الرمز السري غير صحيح!");
+            }
+        };
+
+        window.openRoomPassReset = function() {
+            document.getElementById('roomPassStep').style.display = 'none';
+            document.getElementById('roomResetStep').style.display = 'block';
+        };
+
+        window.closeRoomAuthModal = function() {
+            document.getElementById('roomAuthModal').style.display = 'none';
+        };
+
+        window.sendResetCode = function() {
+            const room = allRooms[currentRoomId];
+            if (!room || !room.settings || !room.settings.recoveryEmail) {
+                alert("لا يوجد إيميل استرداد مسجل لهذه الغرفة.");
+                return;
+            }
+            generatedResetCode = Math.floor(100000 + Math.random() * 900000).toString();
+            alert(`📨 تم محاكاة إرسال كود الاسترداد إلى الإيميل: ${room.settings.recoveryEmail}\nالكود التجريبي هو: ${generatedResetCode}`);
+            document.getElementById('codeInputArea').style.display = 'block';
+        };
+
+        window.verifyResetCode = function() {
+            const inputCode = document.getElementById('recoveryCodeInput').value.trim();
+            if (inputCode === generatedResetCode) {
+                const room = allRooms[currentRoomId];
+                alert(`✅ الكود صحيح! الرمز السري للغرفة هو: ${room.settings.password}`);
+                document.getElementById('roomResetStep').style.display = 'none';
+                document.getElementById('roomPassStep').style.display = 'block';
+                document.getElementById('codeInputArea').style.display = 'none';
+            } else {
+                alert("❌ الكود غير صحيح!");
+            }
+        };
+
+        window.openChatRoomDirect = function(roomId, roomName) {
+            currentRoomId = roomId;
+            
+            if(leftRooms[roomId]) {
+                delete leftRooms[roomId];
+                sessionStorage.setItem('leftRooms', JSON.stringify(leftRooms));
+            }
+            
+            const statusDot = document.getElementById('roomHeaderStatusDot');
+            statusDot.className = 'room-header-status-dot online';
+
+            document.getElementById('roomsModal').style.display = 'none';
+            document.getElementById('currentRoomName').innerText = roomName;
+            document.getElementById('roomHeaderAvatar').innerHTML = `<i class="fas fa-comments"></i>`;
+            document.getElementById('roomChatPage').style.display = 'flex';
+            document.getElementById('roomDropdownMenu').style.display = 'none';
+            loadRoomMessages(roomId);
+        };
+
+        window.closeRoomChat = function() {
+            if (activeMessagesRef) {
+                off(activeMessagesRef);
+            }
+            document.getElementById('roomChatPage').style.display = 'none';
+            document.getElementById('roomDropdownMenu').style.display = 'none';
+            loadRooms();
+        };
+
+        window.toggleRoomDropdown = function(event) {
+            event.stopPropagation();
+            const menu = document.getElementById('roomDropdownMenu');
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        };
+
+        document.addEventListener('click', function() {
+            const menu = document.getElementById('roomDropdownMenu');
+            if (menu) menu.style.display = 'none';
+        });
+
+        window.showRoomMembers = function() {
+            alert("👥 الأعضاء المتواجدون حالياً في الغرفة:\n- أنت (متصل)\n- زوار الغرفة الآخرون");
+        };
+
+        window.showRoomSettings = function() {
+            const room = allRooms[currentRoomId];
+            if (!room) return;
+            alert(`⚙️ إعدادات الغرفة:\n- اسم الغرفة: ${room.name}\n- الدولة: ${room.settings?.country || 'غير محدد'}\n- الحد الأقصى للزوار: ${room.maxUsers || 25}\n- نوع الغرفة: ${room.settings?.isPrivate ? 'خاصة (برمز سري)' : 'عامة'}`);
+        };
+
+        window.leaveRoom = function() {
+            if (currentRoomId) {
+                leftRooms[currentRoomId] = true;
+                sessionStorage.setItem('leftRooms', JSON.stringify(leftRooms));
+            }
+            document.getElementById('roomDropdownMenu').style.display = 'none';
+            closeRoomChat();
+        };
+
+        window.sendRoomMessage = function() {
+            if (leftRooms[currentRoomId]) {
+                showErrorBanner("لا يمكنك الإرسال، لقد تركت الغرفة!");
+                return;
+            }
+
+            const msgInput = document.getElementById('roomMsgInput');
+            const text = msgInput.value.trim();
+            
+            if (!text) return;
+            if (!currentRoomId) {
+                showErrorBanner("خطأ: لم يتم تحديد الغرفة الحالية!");
+                return;
+            }
+            if (!auth.currentUser) {
+                showErrorBanner("خطأ: يجب تسجيل الدخول أولاً لإرسال الرسائل!");
+                return;
+            }
+
+            const msgRef = push(ref(db, 'roomMessages/' + currentRoomId));
+            set(msgRef, {
+                senderId: auth.currentUser.uid,
+                senderName: document.getElementById('topUserName').innerText,
+                text: text,
+                timestamp: Date.now()
+            }).then(() => {
+                msgInput.value = '';
+            }).catch((err) => {
+                showErrorBanner("فشل الإرسال: " + err.message);
+            });
+        };
+
+        window.handleRoomMsgKeyPress = function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                sendRoomMessage();
+            }
+        };
+
+        function loadRoomMessages(roomId) {
+            const msgContainer = document.getElementById('roomChatMessages');
+            msgContainer.innerHTML = '';
+            
+            if (activeMessagesRef) {
+                off(activeMessagesRef);
+            }
+            
+            activeMessagesRef = ref(db, 'roomMessages/' + roomId);
+            
+            onValue(activeMessagesRef, (snapshot) => {
+                if (leftRooms[roomId]) return;
+
+                msgContainer.innerHTML = '';
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    for (let key in data) {
+                        const msg = data[key];
+                        const isMyMsg = msg.senderId === auth.currentUser.uid;
+                        const bubbleClass = isMyMsg ? 'msg-bubble my-msg' : 'msg-bubble other-msg';
+                        
+                        const msgHTML = `
+                            <div class="${bubbleClass}">
+                                <span class="msg-sender">${msg.senderName}</span>
+                                <span>${msg.text}</span>
+                            </div>
+                        `;
+                        msgContainer.insertAdjacentHTML('beforeend', msgHTML);
+                    }
+                    msgContainer.scrollTop = msgContainer.scrollHeight;
+                } else {
+                    msgContainer.innerHTML = '<div class="empty-state">ابدأ المحادثة في هذه الغرفة...</div>';
+                }
+            }, (error) => {
+                showErrorBanner("خطأ في تحميل الرسائل: " + error.message);
+            });
+        }
+
+        window.switchTab = function(tabName) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            if(event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            }
+        };
+    </script>
+</body>
+</html>
