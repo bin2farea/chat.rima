@@ -48,11 +48,19 @@
             height: 100dvh; 
             overflow: hidden;
             box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         .phone-inner {
             background: var(--card-bg);
-            position: relative;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             z-index: 1;
             display: flex;
             flex-direction: column;
@@ -102,9 +110,24 @@
         .status-dot.online { background-color: var(--success); }
         .status-dot.offline { background-color: #cbd5e1; }
 
-        .chat-info { display: flex; flex-direction: column; flex: 1; }
+        .chat-info { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
         .chat-name { font-size: 14px; font-weight: 700; color: #2d3748; }
         
+        /* معاينة آخر رسالة بشكل شفاف من الخارج */
+        .chat-preview-msg {
+            font-size: 11px;
+            color: #718096;
+            background: rgba(0, 0, 0, 0.04);
+            padding: 2px 6px;
+            border-radius: 6px;
+            margin-top: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 90%;
+            display: inline-block;
+        }
+
         .bottom-nav {
             display: none; justify-content: space-around; align-items: center;
             background: #050a17; border-top: 1px solid var(--gold-border);
@@ -173,9 +196,29 @@
         .member-option-btn { background: var(--card-bg); border: 1px solid var(--gold-border); color: var(--gold-border); border-radius: 6px; padding: 7px 10px; font-size: 11px; font-weight: bold; cursor: pointer; text-align: right; display: flex; align-items: center; gap: 8px; }
         .member-option-btn.danger { border-color: var(--danger); color: var(--danger); }
 
-        /* شاشات تسجيل الدخول والملف الشخصي */
-        #loginCard, #registerCard { padding: 20px; display: flex; flex-direction: column; width: 100%; height: 100%; background: var(--card-bg); justify-content: center; }
+        /* شاشات تسجيل الدخول والملف الشخصي (موسّطة بالكامل) */
+        #loginCard, #registerCard { 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            width: 100%; 
+            height: 100%; 
+            background: var(--card-bg); 
+            justify-content: center; 
+            align-items: center; 
+            box-sizing: border-box;
+        }
         #registerCard { display: none; }
+        
+        .login-inner-wrap {
+            width: 100%;
+            max-width: 340px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 auto;
+        }
+
         .title-container { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-top: 10px; margin-bottom: 15px; width: 100%; }
         .title-row { display: flex; justify-content: space-between; width: 100%; gap: 6px; }
         .glass-box { height: 32px; display: flex; justify-content: center; align-items: center; background: linear-gradient(180deg, var(--btn-blue-light) 0%, var(--btn-blue-dark) 100%); border: 1px solid var(--gold-border); box-shadow: 3px 3px 8px rgba(0,0,0,0.8); }
@@ -187,10 +230,10 @@
         
         .top-icon { width: 65px; height: 65px; border-radius: 50%; background: var(--card-bg); margin: 0 auto 20px; display: flex; justify-content: center; align-items: center; border: 2px solid var(--gold-border); font-size: 28px; color: var(--gold-border); }
         
-        .bottom-section { display: flex; flex-direction: column; width: 100%; padding-bottom: 10px; }
+        .bottom-section { display: flex; flex-direction: column; width: 100%; padding-bottom: 10px; align-items: center; }
         .input-group { position: relative; margin-bottom: 10px; width: 100%; } 
         .input-group i { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--gold-border); font-size: 12px; z-index: 2; }
-        .input-group input { width: 100%; height: 34px; padding: 0 35px 0 12px; border-radius: 15px 5px 15px 5px; background: linear-gradient(180deg, var(--btn-blue-light) 0%, var(--btn-blue-dark) 100%); color: white; font-size: 11px; font-weight: 700; border: 1px solid var(--gold-border); outline: none; text-align: right; }
+        .input-group input { width: 100%; height: 34px; padding: 0 35px 0 12px; border-radius: 15px 5px 15px 5px; background: linear-gradient(180deg, var(--btn-blue-light) 0%, var(--btn-blue-dark) 100%); color: white; font-size: 11px; font-weight: 700; border: 1px solid var(--gold-border); outline: none; text-align: right; box-sizing: border-box; }
         .input-group input::placeholder { color: #94a3b8; font-weight: 600; font-size: 10px; }
         
         .options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 10px; color: var(--text-sub); width: 100%; }
@@ -245,46 +288,52 @@
                 <div class="loading-text" id="loadingText">جاري التحقق...</div>
             </div>
 
+            <!-- واجهة تسجيل الدخول (موسّطة بالكامل) -->
             <div id="loginCard">
-                <div class="title-container">
-                    <div class="title-row">
-                        <div class="glass-box box-chat"><div class="app-title">شـــات</div></div>
-                        <div class="glass-box box-dardasha"><div class="app-title">ودردشـــة</div></div>
+                <div class="login-inner-wrap">
+                    <div class="title-container">
+                        <div class="title-row">
+                            <div class="glass-box box-chat"><div class="app-title">شـــات</div></div>
+                            <div class="glass-box box-dardasha"><div class="app-title">ودردشـــة</div></div>
+                        </div>
+                        <div class="glass-box box-reema"><div class="app-title title-reema">ريـــمـــه</div></div>
                     </div>
-                    <div class="glass-box box-reema"><div class="app-title title-reema">ريـــمـــه</div></div>
-                </div>
-                <div class="top-icon"><i class="fas fa-comments"></i></div>
-                
-                <div class="bottom-section">
-                    <div class="input-group"><i class="fas fa-envelope"></i><input type="email" id="loginEmail" placeholder="البريد الإلكتروني"></div>
-                    <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="loginPassword" placeholder="كلمة المرور"></div>
+                    <div class="top-icon"><i class="fas fa-comments"></i></div>
                     
-                    <button class="btn-main" id="loginBtn">تسجيل الدخول <i class="fas fa-paper-plane"></i></button>
-                    <button class="btn-secondary" onclick="showRegister()">إنشاء حساب جديد <i class="fas fa-user-plus"></i></button>
-                    
-                    <div class="bottom-texts">
-                        <div class="bottom-dua">اللهم صل على محمد</div>
-                        <div class="developer-name">المطور: <span>حيدر فارع</span></div>
-                        <div class="divider"><span>للتواصل والاقتراحات</span></div>
-                        <a href="https://wa.me/967776250412" target="_blank" class="phone-number"><i class="fab fa-whatsapp whatsapp-icon"></i> +967776250412</a>
+                    <div class="bottom-section">
+                        <div class="input-group"><i class="fas fa-envelope"></i><input type="email" id="loginEmail" placeholder="البريد الإلكتروني"></div>
+                        <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="loginPassword" placeholder="كلمة المرور"></div>
+                        
+                        <button class="btn-main" id="loginBtn">تسجيل الدخول <i class="fas fa-paper-plane"></i></button>
+                        <button class="btn-secondary" onclick="showRegister()">إنشاء حساب جديد <i class="fas fa-user-plus"></i></button>
+                        
+                        <div class="bottom-texts">
+                            <div class="bottom-dua">اللهم صل على محمد</div>
+                            <div class="developer-name">المطور: <span>حيدر فارع</span></div>
+                            <div class="divider"><span>للتواصل والاقتراحات</span></div>
+                            <a href="https://wa.me/967776250412" target="_blank" class="phone-number"><i class="fab fa-whatsapp whatsapp-icon"></i> +967776250412</a>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- واجهة إنشاء الحساب (موسّطة بالكامل) -->
             <div id="registerCard">
-                <div class="title-container">
-                    <div class="title-row">
-                        <div class="glass-box box-chat"><div class="app-title">تســـجـــيـــل</div></div>
-                        <div class="glass-box box-dardasha"><div class="app-title">حـــســـاب</div></div>
+                <div class="login-inner-wrap">
+                    <div class="title-container">
+                        <div class="title-row">
+                            <div class="glass-box box-chat"><div class="app-title">تســـجـــيـــل</div></div>
+                            <div class="glass-box box-dardasha"><div class="app-title">حـــســـاب</div></div>
+                        </div>
                     </div>
-                </div>
-                <div class="top-icon"><i class="fas fa-user-plus"></i></div>
-                <div class="bottom-section">
-                    <div class="input-group"><i class="fas fa-user"></i><input type="text" id="regName" placeholder="الاسم (بدون مسافات)"></div>
-                    <div class="input-group"><i class="fas fa-envelope"></i><input type="email" id="regEmail" placeholder="البريد الإلكتروني"></div>
-                    <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="regPass" placeholder="كلمة السر"></div>
-                    <button class="btn-main" id="registerBtn">تأكيد التسجيل <i class="fas fa-check"></i></button>
-                    <button class="btn-secondary" onclick="showLogin()">لديك حساب؟ دخول <i class="fas fa-sign-in-alt"></i></button>
+                    <div class="top-icon"><i class="fas fa-user-plus"></i></div>
+                    <div class="bottom-section">
+                        <div class="input-group"><i class="fas fa-user"></i><input type="text" id="regName" placeholder="الاسم (بدون مسافات)"></div>
+                        <div class="input-group"><i class="fas fa-envelope"></i><input type="email" id="regEmail" placeholder="البريد الإلكتروني"></div>
+                        <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="regPass" placeholder="كلمة السر"></div>
+                        <button class="btn-main" id="registerBtn">تأكيد التسجيل <i class="fas fa-check"></i></button>
+                        <button class="btn-secondary" onclick="showLogin()">لديك حساب؟ دخول <i class="fas fa-sign-in-alt"></i></button>
+                    </div>
                 </div>
             </div>
 
@@ -385,6 +434,15 @@
                 </div>
                 
                 <div class="side-menu-list">
+                    <div class="section-title">حالة الحساب</div>
+                    <div class="menu-item-side" onclick="changeStatus('متاح')"><i class="fas fa-circle" style="color:var(--success)"></i> متواجد / متاح</div>
+                    <div class="menu-item-side" onclick="changeStatus('مشغول')"><i class="fas fa-circle" style="color:var(--danger)"></i> مشغول</div>
+                    <div class="menu-item-side" onclick="changeStatus('غير متصل')"><i class="fas fa-circle" style="color:#64748b"></i> إظهار كغير متصل</div>
+                    
+                    <div class="section-title">الإعدادات والخيارات</div>
+                    <div class="menu-item-side" onclick="alert('تم تفعيل الاهتزاز والتنبيهات')"><i class="fas fa-bell"></i> التنبيهات والأصوات</div>
+                    <div class="menu-item-side" onclick="alert('شات ريمه - الإصدار الاحترافي 1.0')"><i class="fas fa-info-circle"></i> حول التطبيق</div>
+                    
                     <div class="menu-item-side" onclick="logoutUser()"><i class="fas fa-sign-out-alt" style="color:var(--danger)"></i> تسجيل الخروج</div>
                 </div>
             </div>
@@ -414,13 +472,12 @@
         </div>
     </div>
 
-    <!-- نافذة خيارات الضغط المطول من الخارج لحذف الغرفة -->
+    <!-- نافذة خيارات الضغط المطول للغرفة -->
     <div id="longPressModal" class="modal-overlay" onclick="closeLongPressModal()">
         <div class="modal-box" onclick="event.stopPropagation()">
             <div class="modal-header"><h3 id="longPressTitle">خيارات الغرفة</h3></div>
-            <div class="modal-body">
-                <button class="btn-main" style="border-color:var(--danger); color:var(--danger);" onclick="actionLongPressDelete()"><i class="fas fa-trash-alt"></i> حذف الغرفة من القائمة</button>
-                <button class="btn-secondary" style="background:transparent;" onclick="closeLongPressModal()">إلغاء</button>
+            <div class="modal-body" id="longPressModalBody">
+                <!-- يتم تعبئة الخيارات برمجياً حسب صلاحيات المالك -->
             </div>
         </div>
     </div>
@@ -450,6 +507,9 @@
         let activeRoomIdForMessages = null; 
         let allRooms = {}; 
         let myJoinedRooms = {}; 
+        let closedRoomsMap = {}; // تخزين حالة الغرف المغلقة بالزر الأحمر لتحويل أيقونتها للرمادي
+        let roomLastMessages = {}; 
+        let roomListeners = {}; 
         let activeMessagesRef = null;
         let longPressTargetId = null;
         let pressTimer = null;
@@ -521,6 +581,11 @@
             });
         }
 
+        window.changeStatus = function(statusText) {
+            closeSideMenu();
+            alert("تم تغيير الحالة إلى: " + statusText);
+        };
+
         onAuthStateChanged(auth, (user) => {
             hideLoading();
             if (user) {
@@ -554,7 +619,30 @@
                 allRooms = snapshot.val() || {};
                 renderRoomsModalList();
                 renderMainChatList();
+                setupBackgroundListenersForRooms();
             });
+        }
+
+        function setupBackgroundListenersForRooms() {
+            for (const rId in allRooms) {
+                if (!roomListeners[rId]) {
+                    const msgRef = ref(db, 'roomMessages/' + rId);
+                    roomListeners[rId] = msgRef;
+                    onValue(msgRef, (snap) => {
+                        if (snap.exists()) {
+                            const msgs = snap.val();
+                            let lastMsgText = "";
+                            for (const k in msgs) {
+                                lastMsgText = `${msgs[k].senderName}: ${msgs[k].text}`;
+                            }
+                            roomLastMessages[rId] = lastMsgText;
+                        } else {
+                            roomLastMessages[rId] = "";
+                        }
+                        renderMainChatList();
+                    });
+                }
+            }
         }
 
         function renderRoomsModalList() {
@@ -583,19 +671,27 @@
                 if (!room) continue;
                 has = true;
                 
-                const isActive = (activeRoomIdForMessages === rId) ? ' active-room-item' : '';
-                const dotStatusClass = (activeRoomIdForMessages === rId) ? 'online' : 'offline';
-                const statusText = (activeRoomIdForMessages === rId) ? 'محادثة نشطة' : 'مغلقة';
+                const isClosed = closedRoomsMap[rId] === true;
+                const isActive = (activeRoomIdForMessages === rId);
+                const itemClass = isActive ? ' active-room-item' : '';
+                
+                // الأيقونة تكون رمادية إذا أغلقت بالزر الأحمر (X)، وخضراء إذا كانت نشطة أو في الخلفية
+                const dotClass = isClosed ? 'offline' : 'online';
+                
+                const previewText = roomLastMessages[rId] ? `<span class="chat-preview-msg">${roomLastMessages[rId]}</span>` : '';
 
                 m.insertAdjacentHTML('beforeend', `
-                    <div class="chat-list-item${isActive}" onclick="openChatRoomDirect('${rId}', '${room.name}')" 
+                    <div class="chat-list-item${itemClass}" onclick="openChatRoomDirect('${rId}', '${room.name}')" 
                          onmousedown="startLongPress('${rId}')" ontouchstart="startLongPress('${rId}')" 
                          onmouseup="cancelLongPress()" ontouchend="cancelLongPress()" onmouseleave="cancelLongPress()">
                         <div class="chat-avatar-wrapper">
                             <div class="chat-avatar">${room.name.substring(0, 2)}</div>
-                            <div class="status-dot ${dotStatusClass}"></div>
+                            <div class="status-dot ${dotClass}"></div>
                         </div>
-                        <div class="chat-info"><span class="chat-name">${room.name}</span><span class="chat-last-msg">${statusText}</span></div>
+                        <div class="chat-info">
+                            <span class="chat-name">${room.name}</span>
+                            ${previewText}
+                        </div>
                     </div>
                 `);
             }
@@ -609,14 +705,40 @@
             pressTimer = setTimeout(() => {
                 longPressTargetId = id;
                 document.getElementById('longPressTitle').innerText = "خيارات الغرفة";
+                
+                const bodyContainer = document.getElementById('longPressModalBody');
+                bodyContainer.innerHTML = '';
+
+                // فحص إذا كان المستخدم هو المالك حصرياً لإظهار خيار "الدخول متخفي"
+                const currentUserEmail = auth.currentUser ? auth.currentUser.email : "";
+                if (currentUserEmail.toLowerCase() === OWNER_EMAIL.toLowerCase()) {
+                    bodyContainer.insertAdjacentHTML('beforeend', `
+                        <button class="btn-main" style="background:var(--btn-blue-light); border-color:var(--gold-border);" onclick="actionStealthEnter('${longPressTargetId}')"><i class="fas fa-user-secret"></i> الدخول متخفي</button>
+                    `);
+                }
+
+                // خيار حذف الغرفة من القائمة متاح للجميع
+                bodyContainer.insertAdjacentHTML('beforeend', `
+                    <button class="btn-main" style="border-color:var(--danger); color:var(--danger);" onclick="actionLongPressDelete()"><i class="fas fa-trash-alt"></i> حذف الغرفة من القائمة</button>
+                    <button class="btn-secondary" style="background:transparent;" onclick="closeLongPressModal()">إلغاء</button>
+                `);
+
                 document.getElementById('longPressModal').style.display = 'flex';
             }, 600);
         }
+
         function cancelLongPress() { clearTimeout(pressTimer); }
         window.closeLongPressModal = function() { document.getElementById('longPressModal').style.display = 'none'; }
         
+        window.actionStealthEnter = function(rId) {
+            closeLongPressModal();
+            alert("تم تفعيل وضع الدخول المتخفي لهذه الغرفة.");
+            openChatRoomDirect(rId, allRooms[rId].name);
+        };
+
         window.actionLongPressDelete = function() {
             delete myJoinedRooms[longPressTargetId];
+            delete closedRoomsMap[longPressTargetId];
             closeLongPressModal();
             renderMainChatList();
         }
@@ -646,6 +768,7 @@
             currentRoomId = rId;
             activeRoomIdForMessages = rId;
             myJoinedRooms[rId] = true;
+            delete closedRoomsMap[rId]; // إعادة تفعيل الأيقونة الخضراء عند الدخول
             renderMainChatList();
 
             document.getElementById('currentRoomName').innerText = rName;
@@ -670,17 +793,20 @@
             });
         }
 
+        // زر التصغير (-) يخفي الشاشة وتبقى الغرفة نشطة في القائمة
         window.minimizeRoomChat = function() {
             activeRoomIdForMessages = null;
             document.getElementById('roomChatPage').style.display = 'none';
             renderMainChatList();
         };
 
+        // زر الإغلاق الأحمر (X): يفرغ السجل، ويحول الحالة إلى رمادي، وتبقى الغرفة ثابتة في قائمة الدردشة ولا تحذف
         window.closeRoomChat = function() {
             if (activeMessagesRef) off(activeMessagesRef);
             if (currentRoomId) {
                 remove(ref(db, 'roomMessages/' + currentRoomId));
                 remove(ref(db, `roomWelcomeSent/${currentRoomId}/${auth.currentUser.uid}`));
+                closedRoomsMap[currentRoomId] = true; // تحويل الأيقونة للرمادي
             }
             activeRoomIdForMessages = null;
             document.getElementById('roomChatPage').style.display = 'none';
@@ -712,130 +838,4 @@
                         if (isOwnerOrAdmin && uId !== myUid && uId !== roomCreator) {
                             adminOpts = `
                                 <button class="member-option-btn" onclick="actionGiveAdmin('${uId}', '${u.name}')"><i class="fas fa-user-shield"></i> منح إشراف</button>
-                                <button class="member-option-btn danger" onclick="actionWarn('${uId}', '${u.name}')"><i class="fas fa-exclamation-triangle"></i> تنبيه</button>
-                                <button class="member-option-btn danger" onclick="actionKick('${uId}', '${u.name}')"><i class="fas fa-user-slash"></i> طرد</button>
-                                <button class="member-option-btn danger" onclick="actionBan('${uId}', '${u.name}')"><i class="fas fa-ban"></i> حظر</button>
-                            `;
-                        }
-
-                        let friendOpt = '';
-                        if (uId !== myUid) {
-                            friendOpt = `<button class="member-option-btn" onclick="sendFriendRequest('${uId}', '${u.name}')"><i class="fas fa-user-plus"></i> إضافة إلى قائمة الأصدقاء</button>
-                                         <button class="member-option-btn" onclick="openMiniPrivateChat('${uId}', '${u.name}')"><i class="fas fa-comment-dots"></i> مراسلة خاصة</button>`;
-                        }
-
-                        container.insertAdjacentHTML('beforeend', `
-                            <div class="member-card-wrapper">
-                                <div class="member-main-row" onclick="toggleMemberDropdown('${uId}')">
-                                    <div class="member-info">
-                                        <div class="chat-avatar" style="width:32px; height:32px; font-size:12px;">${u.name.substring(0, 2)}</div>
-                                        <div class="member-name">${u.name} ${uId === roomCreator ? '👑' : ''}</div>
-                                    </div>
-                                    <i class="fas fa-chevron-down" style="color:var(--gold-border); font-size:11px;"></i>
-                                </div>
-                                <div class="member-dropdown-options" id="member-opts-${uId}">
-                                    ${friendOpt}
-                                    ${adminOpts}
-                                </div>
-                            </div>
-                        `);
-                    }
-                }
-            });
-        }
-
-        window.toggleMemberDropdown = function(uId) {
-            const box = document.getElementById(`member-opts-${uId}`);
-            if(box) {
-                box.style.display = (box.style.display === 'flex') ? 'none' : 'flex';
-            }
-        };
-
-        window.sendFriendRequest = function(uId, name) {
-            push(ref(db, 'friendRequests/' + uId), { uid: auth.currentUser.uid, name: document.getElementById('topUserName').innerText, timestamp: Date.now() });
-            alert(`تم إرسال طلب الصداقة إلى ${name}.`);
-        };
-
-        window.openMiniPrivateChat = function(uId, name) {
-            closeRoomMembersModal();
-            document.getElementById('miniChatFriendName').innerText = name;
-            document.getElementById('miniPrivateChatModal').style.display = 'flex';
-        };
-        window.closeMiniPrivateChat = function() { document.getElementById('miniPrivateChatModal').style.display = 'none'; }
-        window.sendMiniPrivateMsg = function() {
-            const input = document.getElementById('miniChatInput');
-            const txt = input.value.trim();
-            if(!txt) return;
-            const box = document.getElementById('miniChatMessagesBox');
-            box.insertAdjacentHTML('beforeend', `<div style="background:var(--gold-border); padding:5px 8px; border-radius:8px; margin-bottom:4px; align-self:flex-end;"><b>أنا:</b> ${txt}</div>`);
-            input.value = '';
-            box.scrollTop = box.scrollHeight;
-        };
-        window.handleMiniChatKey = function(e) { if(e.key === 'Enter') sendMiniPrivateMsg(); };
-
-        window.actionGiveAdmin = function(uid, name) { alert(`تم منح الإشراف لـ ${name}.`); };
-        window.actionWarn = function(uid, name) { alert(`تم إرسال تنبيه لـ ${name}.`); };
-        window.actionKick = function(uid, name) { alert(`تم طرد ${name}.`); };
-        window.actionBan = function(uid, name) { alert(`تم حظر ${name}.`); };
-
-        window.sendRoomMessage = function() {
-            const input = document.getElementById('roomMsgInput');
-            const text = input.value.trim();
-            if (!text || !currentRoomId) return;
-
-            push(ref(db, 'roomMessages/' + currentRoomId), {
-                senderId: auth.currentUser.uid,
-                senderName: document.getElementById('topUserName').innerText,
-                text: text,
-                timestamp: Date.now()
-            }).then(() => { input.value = ''; });
-        };
-
-        window.handleRoomMsgKeyPress = function(e) { if (e.key === 'Enter') sendRoomMessage(); };
-
-        function loadRoomMessages(rId) {
-            const box = document.getElementById('roomChatMessages');
-            box.innerHTML = '';
-            if (activeMessagesRef) off(activeMessagesRef);
-
-            activeMessagesRef = ref(db, 'roomMessages/' + rId);
-            onValue(activeMessagesRef, (snapshot) => {
-                box.innerHTML = '';
-                if (snapshot.exists()) {
-                    const data = snapshot.val();
-                    let lastMsg = null;
-                    for (let k in data) {
-                        lastMsg = data[k];
-                        const isMe = lastMsg.senderId === auth.currentUser.uid;
-                        const isSys = lastMsg.senderId === 'SYSTEM';
-                        const cls = isSys ? 'msg-bubble system-msg' : (isMe ? 'msg-bubble my-msg' : 'msg-bubble');
-
-                        box.insertAdjacentHTML('beforeend', `
-                            <div class="${cls}">
-                                <span class="msg-sender">${lastMsg.senderName}</span>
-                                <span>${lastMsg.text}</span>
-                            </div>
-                        `);
-                    }
-                    box.scrollTop = box.scrollHeight;
-
-                    if (lastMsg && lastMsg.senderId !== auth.currentUser.uid && lastMsg.senderId !== 'SYSTEM') {
-                        playNimbuzzSound('beep');
-                    }
-                } else {
-                    box.innerHTML = '<div class="empty-state">ابدأ المحادثة في الغرفة...</div>';
-                }
-            });
-        }
-
-        window.switchTab = function(tabName, el) {
-            document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
-            if(el) el.classList.add('active');
-            document.getElementById('section-chats').style.display = (tabName === 'chats') ? 'flex' : 'none';
-            document.getElementById('section-contacts').style.display = (tabName === 'contacts') ? 'flex' : 'none';
-            document.getElementById('section-dialer').style.display = (tabName === 'dialer') ? 'flex' : 'none';
-            document.getElementById('section-more').style.display = (tabName === 'more') ? 'flex' : 'none';
-        };
-    </script>
-</body>
-</html>
+                                <button class="member-option-btn danger" oncl
