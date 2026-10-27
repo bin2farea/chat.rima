@@ -23,45 +23,42 @@
             --text-dark: #2d3748;
         }
 
-        * {
+        html, body {
+            background-color: var(--card-bg) !important;
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Cairo', sans-serif;
             -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background: var(--card-bg);
-            display: flex;
-            justify-content: center;
-            align-items: center;
             height: 100dvh;
             width: 100vw;
             overflow: hidden; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .phone-container {
             position: relative;
             width: 100%;
-            max-width: 100%;
-            margin: 0;
+            max-width: 480px;
+            margin: 0 auto;
             padding: 0; 
-            border-radius: 0; 
             background: var(--card-bg); 
             height: 100dvh; 
             overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
 
         .phone-inner {
             background: var(--card-bg);
-            border-radius: 0; 
             position: relative;
             z-index: 1;
             display: flex;
             flex-direction: column;
             height: 100%; 
             overflow: hidden;
+            width: 100%;
         }
 
         #loadingScreen { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--card-bg); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; gap: 15px; }
@@ -85,58 +82,40 @@
         .menu-toggle { color: var(--gold-border); font-size: 22px; cursor: pointer; }
 
         .app-section { flex: 1; overflow-y: auto; display: flex; flex-direction: column; color: var(--text-dark); background: var(--bg-light); position: relative; }
-        .empty-state { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; color: #a0aec0; font-size: 14px; font-weight: 600; }
+        .empty-state { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; color: #a0aec0; font-size: 14px; font-weight: 600; text-align: center; padding: 20px; }
 
         .chat-list-item {
             display: flex; align-items: center; padding: 12px 15px;
             border-bottom: 1px solid #edf2f7; cursor: pointer;
             background: #fff; transition: background 0.2s; position: relative;
+            user-select: none;
         }
         .chat-list-item:active { background: #f8fafc; }
         
-        .chat-avatar-wrapper {
-            position: relative;
-            margin-left: 12px;
-            flex-shrink: 0;
-        }
+        .chat-list-item.active-room-item { background: #f0fdf4 !important; border-right: 4px solid var(--success); }
 
-        .chat-avatar {
-            width: 45px; height: 45px; border-radius: 50%;
-            background: #e2e8f0; display: flex; justify-content: center; align-items: center;
-            color: #4a5568; font-weight: bold; font-size: 18px;
-        }
+        .chat-avatar-wrapper { position: relative; margin-left: 12px; flex-shrink: 0; }
+        .chat-avatar { width: 45px; height: 45px; border-radius: 50%; background: #e2e8f0; display: flex; justify-content: center; align-items: center; color: #4a5568; font-weight: bold; font-size: 18px; overflow: hidden; }
+        .chat-avatar img { width: 100%; height: 100%; object-fit: cover; }
         
         .status-dot { position: absolute; bottom: 0; left: 0; width: 13px; height: 13px; border-radius: 50%; border: 2px solid #fff; }
         .status-dot.online { background-color: var(--success); }
         .status-dot.offline { background-color: #cbd5e1; }
 
         .chat-info { display: flex; flex-direction: column; flex: 1; }
-        .chat-name-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
         .chat-name { font-size: 14px; font-weight: 700; color: #2d3748; }
         
-        .delete-chat-btn {
-            background: transparent;
-            border: none;
-            color: #cbd5e1;
-            font-size: 14px;
-            cursor: pointer;
-            padding: 5px;
-            transition: color 0.2s;
-        }
-        .delete-chat-btn:hover { color: var(--danger); }
-
-        .chat-last-msg { font-size: 11px; color: #718096; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
-
         .bottom-nav {
             display: none; justify-content: space-around; align-items: center;
             background: #050a17; border-top: 1px solid var(--gold-border);
             padding: 8px 0; width: 100%; flex-shrink: 0; 
         }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--text-sub); cursor: pointer; font-size: 9px; font-weight: 700; transition: all 0.2s; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--text-sub); cursor: pointer; font-size: 9px; font-weight: 700; position: relative; }
         .nav-item i { font-size: 18px; }
         .nav-item.active { color: var(--gold-border); }
-        .nav-item.active i { filter: drop-shadow(0 0 5px var(--gold-glow)); }
+        .badge-counter { position: absolute; top: -2px; right: 25%; background: var(--danger); color: white; font-size: 8px; padding: 2px 5px; border-radius: 50%; font-weight: bold; display: none; }
 
+        /* صفحة غرفة الدردشة */
         #roomChatPage {
             display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: #e5e7eb; z-index: 100; flex-direction: column; overflow: hidden; 
@@ -146,160 +125,114 @@
             padding: 10px 15px; background: var(--card-bg); color: white;
             border-bottom: 1px solid var(--gold-border); flex-shrink: 0; position: relative;
         }
+        .room-header-left { display: flex; align-items: center; gap: 8px; }
+        .room-header-avatar-wrap { position: relative; width: 35px; height: 35px; }
+        .room-header-avatar { width: 35px; height: 35px; border-radius: 50%; background: var(--btn-blue-light); border: 1px solid var(--gold-border); display: flex; justify-content: center; align-items: center; color: var(--gold-border); font-size: 14px; font-weight: bold; overflow: hidden; }
+        .room-header-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .room-chat-header h2 { font-size: 14px; font-weight: 700; color: var(--gold-border); margin: 0; }
         
-        .room-header-right {
-            display: flex; align-items: center; gap: 10px; position: relative; cursor: pointer;
-        }
-        .room-header-avatar-wrap {
-            position: relative; width: 35px; height: 35px;
-        }
-        .room-header-avatar {
-            width: 35px; height: 35px; border-radius: 50%;
-            background: var(--btn-blue-light); border: 1px solid var(--gold-border);
-            display: flex; justify-content: center; align-items: center; color: var(--gold-border);
-            font-size: 14px; font-weight: bold; overflow: hidden;
-        }
-        .room-header-status-dot {
-            position: absolute; bottom: 0; left: 0; width: 10px; height: 10px;
-            border-radius: 50%; border: 2px solid var(--card-bg);
-        }
-        .room-header-status-dot.online { background-color: var(--success); }
-        .room-header-status-dot.offline { background-color: #cbd5e1; }
+        .chat-controls-top { display: flex; align-items: center; gap: 8px; }
+        .chat-ctrl-btn { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 12px; cursor: pointer; }
+        .chat-ctrl-btn.close-btn { border-color: var(--danger); color: var(--danger); }
 
-        .room-chat-header h2 { font-size: 14px; font-weight: 700; color: var(--gold-border); }
-        .chat-controls button { background: transparent; border: none; color: white; font-size: 18px; cursor: pointer; }
+        /* نافذة المراسلة الخاصة المنبثقة يمين */
+        #miniPrivateChatModal {
+            display: none; position: absolute; bottom: 50px; right: 10px; width: 280px; height: 350px;
+            background: #fff; border: 2px solid var(--gold-border); border-radius: 12px; z-index: 160;
+            flex-direction: column; box-shadow: 0 5px 20px rgba(0,0,0,0.5); overflow: hidden;
+        }
+        .mini-chat-header { background: var(--card-bg); color: var(--gold-border); padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: bold; }
+        .mini-chat-body { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; font-size: 11px; }
+        .mini-chat-input { display: flex; padding: 6px; background: #f1f5f9; border-top: 1px solid #cbd5e1; gap: 5px; }
+        .mini-chat-input input { flex: 1; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 15px; font-size: 11px; outline: none; }
+        .mini-chat-input button { background: var(--card-bg); color: var(--gold-border); border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; }
 
-        .room-dropdown-menu {
-            display: none; position: absolute; top: 55px; right: 15px;
-            background: var(--card-bg); border: 1px solid var(--gold-border);
-            border-radius: 12px; width: 220px; box-shadow: 0 10px 25px rgba(0,0,0,0.8);
-            z-index: 110; flex-direction: column; overflow: hidden;
-        }
-        .room-dropdown-item {
-            padding: 12px 15px; color: var(--text-main); font-size: 12px; font-weight: 600;
-            display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.08);
-            cursor: pointer; transition: background 0.2s;
-        }
-        .room-dropdown-item:active { background: var(--btn-blue-light); }
-        .room-dropdown-item i { color: var(--gold-border); width: 18px; text-align: center; }
-        .room-dropdown-item.danger { color: var(--danger); }
-        .room-dropdown-item.danger i { color: var(--danger); }
-
-        #chatErrorBanner {
-            display: none; background-color: #ef4444; color: white; padding: 8px; 
-            text-align: center; font-size: 11px; font-weight: bold; 
-            flex-shrink: 0; z-index: 1000;
-        }
-
-        .room-chat-messages {
-            flex: 1; overflow-y: auto; padding: 15px;
-            display: flex; flex-direction: column; gap: 10px;
-        }
-        .msg-bubble {
-            background: #ffffff; padding: 8px 12px; border-radius: 15px;
-            max-width: 80%; align-self: flex-start; font-size: 13px; color: #2d3748; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-        .msg-bubble.my-msg { background: var(--gold-border); color: #000; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .msg-bubble.other-msg { border-bottom-left-radius: 2px; }
+        .room-chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .msg-bubble { background: #ffffff; padding: 8px 12px; border-radius: 15px; max-width: 80%; align-self: flex-start; font-size: 13px; color: #2d3748; }
+        .msg-bubble.my-msg { background: var(--gold-border); color: #000; align-self: flex-end; }
+        .msg-bubble.system-msg { background: #e0f2fe; color: #0369a1; align-self: center; font-size: 11px; text-align: center; border-radius: 10px; width: 90%; max-width: 100%; border: 1px solid #bae6fd; }
         .msg-sender { font-size: 10px; color: #718096; margin-bottom: 2px; display: block; }
 
-        .room-chat-input {
-            display: flex; padding: 10px; background: #ffffff;
-            border-top: 1px solid #e2e8f0; gap: 10px; flex-shrink: 0;
-            position: relative; z-index: 10;
-        }
+        .room-chat-input { display: flex; padding: 10px; background: #ffffff; border-top: 1px solid #e2e8f0; gap: 10px; flex-shrink: 0; }
         .room-chat-input input { flex: 1; padding: 10px 15px; border: 1px solid #cbd5e1; border-radius: 20px; outline: none; font-size: 12px; }
-        .room-chat-input button { background: var(--card-bg); color: var(--gold-border); border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 16px; }
+        .room-chat-input button { background: var(--card-bg); color: var(--gold-border); border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 16px; flex-shrink: 0; }
 
-        #loginCard, #registerCard {
-            padding: 20px; display: flex; flex-direction: column; width: 100%; height: 100%; background: var(--card-bg);
-        }
+        /* نافذة خيارات الأعضاء */
+        #roomMembersModal { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 120; justify-content: center; align-items: center; }
+        .members-modal-box { background: var(--card-bg); width: 92%; max-height: 85dvh; border-radius: 15px; border: 1px solid var(--gold-border); display: flex; flex-direction: column; overflow: hidden; }
+        .members-header { background: var(--btn-blue-dark); padding: 12px 15px; border-bottom: 1px solid var(--gold-border); display: flex; justify-content: space-between; align-items: center; }
+        .members-header h3 { color: var(--gold-border); font-size: 14px; margin: 0; }
+        .members-body { padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        
+        .member-card-wrapper { background: var(--btn-blue-light); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden; margin-bottom: 5px; }
+        .member-main-row { display: flex; align-items: center; justify-content: space-between; padding: 10px; cursor: pointer; }
+        .member-info { display: flex; align-items: center; gap: 10px; }
+        .member-name { color: var(--text-main); font-size: 13px; font-weight: bold; }
+        
+        .member-dropdown-options { display: none; flex-direction: column; background: var(--btn-blue-dark); padding: 8px 12px; border-top: 1px solid rgba(255,153,0,0.2); gap: 6px; }
+        .member-option-btn { background: var(--card-bg); border: 1px solid var(--gold-border); color: var(--gold-border); border-radius: 6px; padding: 7px 10px; font-size: 11px; font-weight: bold; cursor: pointer; text-align: right; display: flex; align-items: center; gap: 8px; }
+        .member-option-btn.danger { border-color: var(--danger); color: var(--danger); }
+
+        /* شاشات تسجيل الدخول والملف الشخصي */
+        #loginCard, #registerCard { padding: 20px; display: flex; flex-direction: column; width: 100%; height: 100%; background: var(--card-bg); justify-content: center; }
         #registerCard { display: none; }
-        .title-container { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-top: 20px; margin-bottom: 15px; width: 100%; }
+        .title-container { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-top: 10px; margin-bottom: 15px; width: 100%; }
         .title-row { display: flex; justify-content: space-between; width: 100%; gap: 6px; }
-        .glass-box { height: 32px; display: flex; justify-content: center; align-items: center; background: linear-gradient(180deg, var(--btn-blue-light) 0%, var(--btn-blue-dark) 100%); border: 1px solid var(--gold-border); box-shadow: 3px 3px 8px rgba(0,0,0,0.8), -1px -1px 3px rgba(255,255,255,0.1), 0 0 8px var(--gold-glow); }
+        .glass-box { height: 32px; display: flex; justify-content: center; align-items: center; background: linear-gradient(180deg, var(--btn-blue-light) 0%, var(--btn-blue-dark) 100%); border: 1px solid var(--gold-border); box-shadow: 3px 3px 8px rgba(0,0,0,0.8); }
         .box-chat { flex: 1; border-radius: 20px 5px 20px 20px; }
         .box-dardasha { flex: 1; border-radius: 5px 20px 20px 20px; }
-        .box-reema { width: 80%; border-radius: 20px 20px 20px 5px; }
-        .app-title { font-family: 'Amiri', serif; font-size: 14px; font-weight: 700; color: #ffffff; margin: 0; line-height: 1; display: flex; align-items: center; justify-content: center; height: 100%; }
+        .box-reema { width: 80%; border-radius: 20px 20px 20px 5px; margin: 0 auto; }
+        .app-title { font-family: 'Amiri', serif; font-size: 14px; font-weight: 700; color: #ffffff; display: flex; align-items: center; justify-content: center; height: 100%; width: 100%; text-align: center; }
         .title-reema { font-size: 16px; letter-spacing: 1px; }
         
-        .top-icon { width: 65px; height: 65px; border-radius: 50%; background: var(--card-bg); margin: 0 auto 20px; display: flex; justify-content: center; align-items: center; border: 2px solid var(--gold-border); box-shadow: 0 15px 25px rgba(0,0,0,0.9), 0 0 15px var(--gold-glow), inset 0 3px 8px rgba(255,255,255,0.4), inset 0 -3px 8px rgba(0,0,0,0.6); font-size: 28px; color: var(--gold-border); }
+        .top-icon { width: 65px; height: 65px; border-radius: 50%; background: var(--card-bg); margin: 0 auto 20px; display: flex; justify-content: center; align-items: center; border: 2px solid var(--gold-border); font-size: 28px; color: var(--gold-border); }
         
-        .bottom-section { margin-top: auto; display: flex; flex-direction: column; width: 100%; padding-bottom: 10px; }
-        .input-group { position: relative; margin-bottom: 10px; } 
+        .bottom-section { display: flex; flex-direction: column; width: 100%; padding-bottom: 10px; }
+        .input-group { position: relative; margin-bottom: 10px; width: 100%; } 
         .input-group i { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--gold-border); font-size: 12px; z-index: 2; }
-        .input-group input { width: 100%; height: 34px; padding: 0 35px 0 12px; border-radius: 15px 5px 15px 5px; background: linear-gradient(180deg, var(--btn-blue-light) 0%, var(--btn-blue-dark) 100%); color: white; font-size: 11px; font-weight: 700; border: 1px solid var(--gold-border); box-shadow: 3px 3px 8px rgba(0,0,0,0.7), -1px -1px 4px rgba(255,255,255,0.1); outline: none; }
+        .input-group input { width: 100%; height: 34px; padding: 0 35px 0 12px; border-radius: 15px 5px 15px 5px; background: linear-gradient(180deg, var(--btn-blue-light) 0%, var(--btn-blue-dark) 100%); color: white; font-size: 11px; font-weight: 700; border: 1px solid var(--gold-border); outline: none; text-align: right; }
         .input-group input::placeholder { color: #94a3b8; font-weight: 600; font-size: 10px; }
         
-        .options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 9px; color: var(--text-sub); }
+        .options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 10px; color: var(--text-sub); width: 100%; }
+        .remember-me { display: flex; align-items: center; gap: 5px; cursor: pointer; color: var(--text-main); font-weight: 600; }
+        .remember-me input { accent-color: var(--gold-border); cursor: pointer; }
         .forgot-pass { color: #60a5fa; text-decoration: none; font-weight: 600; cursor: pointer; }
 
-        .btn-main, .btn-secondary { width: 100%; height: 34px; border-radius: 15px 5px 15px 5px; background: linear-gradient(180deg, #1a2f66 0%, var(--btn-blue-dark) 100%); color: white; font-size: 12px; font-weight: 900; cursor: pointer; margin-bottom: 8px; display: flex; justify-content: center; align-items: center; gap: 6px; border: 1px solid var(--gold-border); box-shadow: 0 10px 15px rgba(0,0,0,0.6), 0 4px 0 #02050d, 0 0 10px var(--gold-glow), inset 0 2px 5px rgba(255,255,255,0.3); transition: all 0.1s ease; }
-        .btn-main i { color: var(--gold-border); font-size: 13px; }
+        .btn-main, .btn-secondary { width: 100%; height: 34px; border-radius: 15px 5px 15px 5px; background: linear-gradient(180deg, #1a2f66 0%, var(--btn-blue-dark) 100%); color: white; font-size: 12px; font-weight: 900; cursor: pointer; margin-bottom: 8px; display: flex; justify-content: center; align-items: center; gap: 6px; border: 1px solid var(--gold-border); }
         .btn-secondary { height: 30px; font-size: 10px; }
         
-        .bottom-texts { display: flex; flex-direction: column; align-items: center; margin-top: 10px; }
-        .bottom-dua { color: #a78bfa; font-size: 10px; font-weight: 700; margin: 0 0 3px 0; line-height: 1.1; }
-        .developer-name { font-size: 9px; color: var(--text-sub); font-weight: 600; margin: 0; line-height: 1.1; }
+        .bottom-texts { display: flex; flex-direction: column; align-items: center; margin-top: 10px; width: 100%; text-align: center; }
+        .bottom-dua { color: #a78bfa; font-size: 10px; font-weight: 700; margin: 0 0 3px 0; }
+        .developer-name { font-size: 9px; color: var(--text-sub); font-weight: 600; }
         .developer-name span { color: var(--gold-border); font-weight: bold; }
-        .divider { display: flex; align-items: center; text-align: center; color: var(--text-sub); font-size: 8px; margin: 5px 0; font-weight: 600; width: 100%; }
+        .divider { display: flex; align-items: center; text-align: center; color: var(--text-sub); font-size: 8px; margin: 5px 0; width: 100%; }
         .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .divider span { padding: 0 5px; }
-        .phone-number { display: flex; justify-content: center; align-items: center; gap: 4px; font-size: 9px; font-weight: 700; color: var(--text-main); margin: 0; direction: ltr; text-decoration: none; line-height: 1.1; }
+        .phone-number { display: flex; justify-content: center; align-items: center; gap: 4px; font-size: 9px; font-weight: 700; color: var(--text-main); direction: ltr; text-decoration: none; }
         .whatsapp-icon { color: #25D366; font-size: 11px; }
 
-        #menuOverlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 40; backdrop-filter: blur(2px); }
-        #sideMenu { position: absolute; top: 0; right: -100%; width: 80%; height: 100%; background: #ffffff; z-index: 50; transition: right 0.3s ease; display: flex; flex-direction: column; box-shadow: -5px 0 15px rgba(0,0,0,0.8); }
+        #menuOverlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 40; }
+        #sideMenu { position: absolute; top: 0; right: -100%; width: 80%; height: 100%; background: #ffffff; z-index: 50; transition: right 0.3s ease; display: flex; flex-direction: column; }
         #sideMenu.open { right: 0; }
         
         .side-menu-header { background: var(--card-bg); padding: 20px; display: flex; align-items: center; gap: 12px; border-bottom: 2px solid var(--gold-border); }
         .side-menu-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--btn-blue-light); border: 2px solid var(--gold-border); display: flex; justify-content: center; align-items: center; font-size: 24px; color: var(--gold-border); overflow: hidden; }
-        .side-menu-avatar img { width: 100%; height: 100%; object-fit: cover; }
         .side-menu-info h3 { color: var(--text-main); font-size: 16px; margin-bottom: 2px; }
         .side-menu-info p { color: var(--text-sub); font-size: 11px; }
         
         .side-menu-list { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; padding-bottom: 20px; }
-        .menu-item-side { display: flex; align-items: center; gap: 15px; padding: 15px 20px; color: #2d3748; font-size: 13px; font-weight: 600; border-bottom: 1px solid #e2e8f0; cursor: pointer; transition: background 0.2s; }
-        .menu-item-side:active { background: #f8fafc; }
+        .menu-item-side { display: flex; align-items: center; gap: 15px; padding: 15px 20px; color: #2d3748; font-size: 13px; font-weight: 600; border-bottom: 1px solid #e2e8f0; cursor: pointer; }
         .menu-item-side i { font-size: 18px; width: 25px; text-align: center; color: var(--gold-border); }
         .section-title { font-size: 10px; color: #a0aec0; padding: 10px 20px 5px; font-weight: bold; background: #f8fafc; }
-
-        .full-page { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--card-bg); z-index: 60; flex-direction: column; }
-        .page-header { display: flex; align-items: center; gap: 10px; padding: 15px; border-bottom: 1px solid var(--gold-border); background: var(--btn-blue-dark); flex-shrink: 0; }
-        .page-header button { background: transparent; border: none; color: var(--gold-border); font-size: 18px; cursor: pointer; }
-        .page-header h2 { color: var(--text-main); font-size: 16px; }
-        .page-content { padding: 20px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; }
-
-        .toggle-row { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--btn-blue-light); border-radius: 10px; margin-bottom: 10px; border: 1px solid #334155; }
-        .toggle-row span { font-size: 13px; color: var(--text-main); }
-        .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #64748b; transition: .4s; border-radius: 22px; }
-        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--gold-border); }
-        input:checked + .slider:before { transform: translateX(18px); }
-
-        .ringtone-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--btn-blue-light); border-radius: 10px; border: 1px solid #334155; cursor: pointer; margin-bottom: 10px; }
-        .ringtone-item.selected { border-color: var(--gold-border); background: rgba(255, 153, 0, 0.1); }
-        .ringtone-name { color: var(--text-main); font-size: 13px; }
 
         .modal-overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 90; justify-content: center; align-items: center; }
         .modal-box { background: var(--card-bg); width: 90%; max-width: 320px; border-radius: 15px; border: 1px solid var(--gold-border); display: flex; flex-direction: column; overflow: hidden; max-height: 85dvh; }
         .modal-header { background: var(--btn-blue-dark); padding: 15px; border-bottom: 1px solid var(--gold-border); text-align: center; flex-shrink: 0; }
-        .modal-header h3 { color: var(--gold-border); font-size: 16px; }
+        .modal-header h3 { color: var(--gold-border); font-size: 16px; margin: 0; }
         .modal-body { padding: 15px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
         
         .create-room-btn { background: var(--gold-border); color: #000; border: none; border-radius: 10px; padding: 10px; font-weight: bold; font-size: 13px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 10px; flex-shrink: 0;}
-        
         .rooms-list-modal { max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; }
-        .rooms-list-modal::-webkit-scrollbar { width: 4px; }
-        .rooms-list-modal::-webkit-scrollbar-thumb { background: var(--gold-border); border-radius: 4px; }
-
-        .toggle-group-create { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: var(--btn-blue-light); border-radius: 8px; border: 1px solid #334155; margin-bottom: 8px;}
-        .toggle-group-create span { font-size: 12px; color: var(--text-main); }
-        
-        #passGroup, #passGroupConfirm, #roomRecoveryEmailGroup { display: none; }
     </style>
 </head>
 <body>
@@ -326,12 +259,7 @@
                     <div class="input-group"><i class="fas fa-envelope"></i><input type="email" id="loginEmail" placeholder="البريد الإلكتروني"></div>
                     <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="loginPassword" placeholder="كلمة المرور"></div>
                     
-                    <div class="options">
-                        <span></span> 
-                        <a href="#" class="forgot-pass" onclick="resetAccountPassword()">نسيت كلمة المرور؟</a>
-                    </div>
-
-                    <button class="btn-main" id="loginBtn" onclick="loginUser()">تسجيل الدخول <i class="fas fa-paper-plane"></i></button>
+                    <button class="btn-main" id="loginBtn">تسجيل الدخول <i class="fas fa-paper-plane"></i></button>
                     <button class="btn-secondary" onclick="showRegister()">إنشاء حساب جديد <i class="fas fa-user-plus"></i></button>
                     
                     <div class="bottom-texts">
@@ -355,7 +283,7 @@
                     <div class="input-group"><i class="fas fa-user"></i><input type="text" id="regName" placeholder="الاسم (بدون مسافات)"></div>
                     <div class="input-group"><i class="fas fa-envelope"></i><input type="email" id="regEmail" placeholder="البريد الإلكتروني"></div>
                     <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="regPass" placeholder="كلمة السر"></div>
-                    <button class="btn-main" id="registerBtn" onclick="registerUser()">تأكيد التسجيل <i class="fas fa-check"></i></button>
+                    <button class="btn-main" id="registerBtn">تأكيد التسجيل <i class="fas fa-check"></i></button>
                     <button class="btn-secondary" onclick="showLogin()">لديك حساب؟ دخول <i class="fas fa-sign-in-alt"></i></button>
                 </div>
             </div>
@@ -371,49 +299,78 @@
 
                 <div id="section-chats" class="app-section" style="display: flex;">
                     <div id="mainChatList" style="width: 100%;">
-                        <div class="empty-state">لا توجد محادثات حالياً...</div>
+                        <div class="empty-state">لا توجد محادثات حالياً... افتح "غرف الدردشة" للانضمام لأي غرفة.</div>
                     </div>
                 </div>
-                <div id="section-contacts" class="app-section" style="display: none;"><div class="empty-state">لا يوجد أصدقاء...</div></div>
+                
+                <div id="section-contacts" class="app-section" style="display: none; padding: 15px;">
+                    <h3 style="font-size: 13px; color: var(--gold-border); margin-bottom: 10px;">قائمة أصدقائي</h3>
+                    <div id="friendsListContainer">
+                        <div class="empty-state" style="height: auto; padding: 15px;">لا يوجد أصدقاء حالياً...</div>
+                    </div>
+                </div>
+
                 <div id="section-dialer" class="app-section" style="display: none;"><div class="empty-state">لوحة الاتصال...</div></div>
                 <div id="section-more" class="app-section" style="display: none;"></div>
 
                 <div class="bottom-nav" id="bottomNav">
-                    <div class="nav-item active" onclick="switchTab('chats')"><i class="fas fa-comment-dots"></i><span>دردشة</span></div>
-                    <div class="nav-item" onclick="switchTab('contacts')"><i class="fas fa-user-friends"></i><span>أصدقاء</span></div>
-                    <div class="nav-item" onclick="switchTab('dialer')"><i class="fas fa-phone"></i><span>اتصال</span></div>
+                    <div class="nav-item active" onclick="switchTab('chats', this)"><i class="fas fa-comment-dots"></i><span>دردشة</span></div>
+                    <div class="nav-item" onclick="switchTab('contacts', this)"><i class="fas fa-user-friends"></i><span>أصدقاء</span><span class="badge-counter" id="friendReqBadge">0</span></div>
+                    <div class="nav-item" onclick="switchTab('dialer', this)"><i class="fas fa-phone"></i><span>اتصال</span></div>
                     <div class="nav-item" onclick="openRoomsModal()"><i class="fas fa-comments"></i><span>غرف الدردشه</span></div>
-                    <div class="nav-item" onclick="switchTab('more')"><i class="fas fa-ellipsis-h"></i><span>المزيد</span></div>
+                    <div class="nav-item" onclick="switchTab('more', this)"><i class="fas fa-ellipsis-h"></i><span>المزيد</span></div>
                 </div>
             </div>
 
+            <!-- صفحة غرفة الدردشة -->
             <div id="roomChatPage">
                 <div class="room-chat-header">
-                    <div class="room-header-right" onclick="toggleRoomDropdown(event)">
-                        <div class="room-header-avatar-wrap">
+                    <div class="room-header-left">
+                        <div class="room-header-avatar-wrap" onclick="openRoomMembersModal()">
                             <div class="room-header-avatar" id="roomHeaderAvatar"><i class="fas fa-comments"></i></div>
-                            <div class="room-header-status-dot online" id="roomHeaderStatusDot"></div>
+                            <div class="room-header-status-dot online"></div>
                         </div>
-                        <h2 id="currentRoomName">اسم الغرفة</h2>
+                        <h2 id="currentRoomName" onclick="openRoomMembersModal()">اسم الغرفة</h2>
                     </div>
 
-                    <div class="room-dropdown-menu" id="roomDropdownMenu">
-                        <div class="room-dropdown-item" onclick="showRoomMembers()"><i class="fas fa-users"></i> الأعضاء الموجودين</div>
-                        <div class="room-dropdown-item" onclick="showRoomSettings()"><i class="fas fa-cog"></i> الضبط والإعدادات</div>
-                        <div class="room-dropdown-item danger" onclick="leaveRoom()"><i class="fas fa-sign-out-alt"></i> ترك الغرفة</div>
-                    </div>
-
-                    <div class="chat-controls">
-                        <button class="close" onclick="closeRoomChat()"><i class="fas fa-times"></i></button>
+                    <div class="chat-controls-top">
+                        <button class="chat-ctrl-btn" onclick="minimizeRoomChat()" title="تصغير الغرفة"><i class="fas fa-minus"></i></button>
+                        <button class="chat-ctrl-btn close-btn" onclick="closeRoomChat()" title="إغلاق وتفريغ رسائل الغرفة"><i class="fas fa-times"></i></button>
                     </div>
                 </div>
                 
-                <div id="chatErrorBanner"></div>
-
                 <div class="room-chat-messages" id="roomChatMessages"></div>
-                <div class="room-chat-input" id="roomChatInputArea">
+                <div class="room-chat-input">
                     <input type="text" id="roomMsgInput" placeholder="اكتب رسالتك..." onkeypress="handleRoomMsgKeyPress(event)">
                     <button type="button" onclick="sendRoomMessage()"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+
+            <!-- نافذة المراسلة الخاصة المنبثقة يمين -->
+            <div id="miniPrivateChatModal">
+                <div class="mini-chat-header">
+                    <span id="miniChatFriendName">محادثة خاصة</span>
+                    <button onclick="closeMiniPrivateChat()" style="background:transparent; border:none; color:var(--gold-border); cursor:pointer;"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="mini-chat-body" id="miniChatMessagesBox">
+                    <div class="empty-state" style="font-size:10px; padding:10px;">ابدأ المحادثة الخاصة...</div>
+                </div>
+                <div class="mini-chat-input">
+                    <input type="text" id="miniChatInput" placeholder="اكتب..." onkeypress="handleMiniChatKey(event)">
+                    <button onclick="sendMiniPrivateMsg()"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+
+            <!-- نافذة خيارات الأعضاء -->
+            <div id="roomMembersModal">
+                <div class="members-modal-box">
+                    <div class="members-header">
+                        <h3>أعضاء الغرفة وإدارتها</h3>
+                        <button onclick="closeRoomMembersModal()" style="background:transparent; border:none; color:var(--gold-border); font-size:16px; cursor:pointer;"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="members-body" id="roomMembersListContainer">
+                        <div class="empty-state">جاري تحميل الأعضاء...</div>
+                    </div>
                 </div>
             </div>
 
@@ -428,95 +385,15 @@
                 </div>
                 
                 <div class="side-menu-list">
-                    <div class="menu-item-side" onclick="alert('قريباً')"><i class="fas fa-star"></i> الاشتراكات</div>
-                    <div class="menu-item-side" onclick="alert('قريباً')"><i class="fas fa-laptop"></i> الأجهزة المرتبطة</div>
-                    <div class="menu-item-side" onclick="openPage('accountPage'); closeSideMenu();"><i class="fas fa-key"></i> الحساب</div>
-                    <div class="menu-item-side" onclick="openPage('privacyPage'); closeSideMenu();"><i class="fas fa-lock"></i> الخصوصية</div>
-                    <div class="menu-item-side" onclick="alert('قريباً')"><i class="fas fa-list"></i> القوائم</div>
-                    <div class="menu-item-side" onclick="alert('قريباً')"><i class="fas fa-comment"></i> الدردشات</div>
-                    <div class="menu-item-side" onclick="alert('قريباً')"><i class="fas fa-palette"></i> الشكل</div>
-                    <div class="menu-item-side" onclick="openPage('notificationsPage'); closeSideMenu();"><i class="fas fa-bell"></i> الإشعارات</div>
-                    <div class="menu-item-side" onclick="alert('قريباً')"><i class="fas fa-database"></i> التخزين والبيانات</div>
-                    <div class="menu-item-side" onclick="alert('قريباً')"><i class="fas fa-universal-access"></i> الوصول</div>
-                    <div class="menu-item-side" onclick="alert('لغة التطبيق: العربية')"><i class="fas fa-globe"></i> لغة التطبيق</div>
-                    <div class="menu-item-side" onclick="window.open('https://wa.me/967776250412', '_blank')"><i class="fas fa-question-circle"></i> المساعدة والملاحظات</div>
-                    
-                    <div class="section-title">خيارات أخرى</div>
                     <div class="menu-item-side" onclick="logoutUser()"><i class="fas fa-sign-out-alt" style="color:var(--danger)"></i> تسجيل الخروج</div>
-                </div>
-            </div>
-
-            <div id="accountPage" class="full-page">
-                <div class="page-header">
-                    <button onclick="closePage('accountPage')"><i class="fas fa-arrow-right"></i></button>
-                    <h2>الحساب</h2>
-                </div>
-                <div class="page-content">
-                    <div class="input-group" style="margin-bottom:15px;">
-                        <i class="fas fa-user"></i>
-                        <input type="text" id="editProfileName" placeholder="اسمك" style="background:var(--btn-blue-light); color:#fff;">
-                    </div>
-                    <div class="input-group" style="margin-bottom:15px;">
-                        <i class="fas fa-envelope-open-text"></i>
-                        <input type="email" id="editRecoveryEmail" placeholder="إيميل الاسترداد (لحسابك)" style="background:var(--btn-blue-light); color:#fff;">
-                    </div>
-                    <button class="btn-main" onclick="saveProfileChanges()">حفظ التعديلات <i class="fas fa-save"></i></button>
-                </div>
-            </div>
-
-            <div id="privacyPage" class="full-page">
-                <div class="page-header">
-                    <button onclick="closePage('privacyPage')"><i class="fas fa-arrow-right"></i></button>
-                    <h2>الخصوصية</h2>
-                </div>
-                <div class="page-content">
-                    <div class="toggle-row">
-                        <span>آخر ظهور</span>
-                        <label class="switch"><input type="checkbox" id="privacyLastSeen" checked onchange="savePrivacySetting('lastSeen', this.checked)"><span class="slider"></span></label>
-                    </div>
-                    <div class="toggle-row">
-                        <span>صورة الملف الشخصي</span>
-                        <label class="switch"><input type="checkbox" id="privacyProfilePic" checked onchange="savePrivacySetting('profilePic', this.checked)"><span class="slider"></span></label>
-                    </div>
-                    <div class="toggle-row">
-                        <span>إشعارات القراءة</span>
-                        <label class="switch"><input type="checkbox" id="privacyReadReceipts" checked onchange="savePrivacySetting('readReceipts', this.checked)"><span class="slider"></span></label>
-                    </div>
-                </div>
-            </div>
-
-            <div id="notificationsPage" class="full-page">
-                <div class="page-header">
-                    <button onclick="closePage('notificationsPage')"><i class="fas fa-arrow-right"></i></button>
-                    <h2>الإشعارات</h2>
-                </div>
-                <div class="page-content">
-                    <h4 style="color:var(--text-main); margin-bottom:15px;">نغمات التنبيه</h4>
-                    <div class="ringtone-item selected" onclick="selectRingtone(this)">
-                        <span class="ringtone-name">نغمة ريمة الرسمية</span>
-                        <i class="fas fa-check-circle" style="color:var(--gold-border);"></i>
-                    </div>
-                    <div class="ringtone-item" onclick="selectRingtone(this)">
-                        <span class="ringtone-name">صوت تنبيه 1</span>
-                    </div>
-                    <div class="ringtone-item" onclick="selectRingtone(this)">
-                        <span class="ringtone-name">صوت تنبيه 2</span>
-                    </div>
-                    <div class="ringtone-item" onclick="selectRingtone(this)">
-                        <span class="ringtone-name">صامت</span>
-                    </div>
                 </div>
             </div>
 
             <div id="roomsModal" class="modal-overlay">
                 <div class="modal-box">
-                    <div class="modal-header">
-                        <h3>الغرف المتاحة</h3>
-                    </div>
+                    <div class="modal-header"><h3>الغرف المتاحة</h3></div>
                     <div class="modal-body">
-                        <button class="create-room-btn" onclick="openCreateRoomModal()">
-                            <i class="fas fa-plus"></i> إنشاء غرفة جديدة
-                        </button>
+                        <button class="create-room-btn" onclick="openCreateRoomModal()"><i class="fas fa-plus"></i> إنشاء غرفة جديدة</button>
                         <div id="roomListContainer" class="rooms-list-modal"></div>
                         <button class="btn-main" style="margin-top:15px; background:transparent; border:1px solid var(--gold-border); color:#fff;" onclick="document.getElementById('roomsModal').style.display='none'">إغلاق</button>
                     </div>
@@ -525,82 +402,11 @@
 
             <div id="createRoomModal" class="modal-overlay">
                 <div class="modal-box">
-                    <div class="modal-header">
-                        <h3>إنشاء غرفة جديدة</h3>
-                    </div>
+                    <div class="modal-header"><h3>إنشاء غرفة جديدة</h3></div>
                     <div class="modal-body">
-                        <div class="input-group">
-                            <i class="fas fa-comments"></i>
-                            <input type="text" id="newRoomName" placeholder="اسم الغرفة">
-                        </div>
-                        <div class="input-group">
-                            <i class="fas fa-users"></i>
-                            <input type="number" id="newRoomMax" placeholder="عدد الزوار (الحد الأقصى)" value="25">
-                        </div>
-                        <div class="input-group">
-                            <i class="fas fa-globe"></i>
-                            <input type="text" id="newRoomCountry" placeholder="الدولة">
-                        </div>
-
-                        <div class="toggle-group-create">
-                            <span>إخفاء الغرفة من البحث</span>
-                            <label class="switch"><input type="checkbox" id="hideFromSearch"><span class="slider"></span></label>
-                        </div>
-                        
-                        <div class="toggle-group-create">
-                            <span>غرفة خاصة (رمز سري)</span>
-                            <label class="switch"><input type="checkbox" id="isPrivateRoom" onchange="togglePassVisibility()"><span class="slider"></span></label>
-                        </div>
-
-                        <div class="input-group" id="passGroup">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" id="newRoomPass" placeholder="الرمز السري للغرفة">
-                        </div>
-                        
-                        <div class="input-group" id="passGroupConfirm">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" id="newRoomPassConfirm" placeholder="تأكيد الرمز السري">
-                        </div>
-
-                        <div class="input-group" id="roomRecoveryEmailGroup">
-                            <i class="fas fa-envelope-open-text"></i>
-                            <input type="email" id="newRoomRecoveryEmail" placeholder="إيميل استرداد رمز الغرفة">
-                        </div>
-
+                        <div class="input-group"><i class="fas fa-comments"></i><input type="text" id="newRoomName" placeholder="اسم الغرفة"></div>
                         <button class="btn-main" style="margin-top:15px;" onclick="submitNewRoom()">تأكيد الإنشاء <i class="fas fa-check"></i></button>
                         <button class="btn-secondary" style="background:transparent;" onclick="document.getElementById('createRoomModal').style.display='none'">إلغاء</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="roomAuthModal" class="modal-overlay">
-                <div class="modal-box">
-                    <div class="modal-header">
-                        <h3>الغرفة الخاصة</h3>
-                    </div>
-                    <div class="modal-body">
-                        <div id="roomPassStep">
-                            <div class="input-group" style="margin-bottom:10px;">
-                                <i class="fas fa-lock"></i>
-                                <input type="password" id="enterRoomPass" placeholder="أدخل الرمز السري">
-                            </div>
-                            <button class="btn-main" onclick="verifyRoomPass()">دخول الغرفة <i class="fas fa-sign-in-alt"></i></button>
-                            <button class="btn-secondary" style="background:transparent; color:var(--text-sub); border:none;" onclick="openRoomPassReset()">نسيت الرمز السري؟</button>
-                        </div>
-
-                        <div id="roomResetStep" style="display: none;">
-                            <p style="color: var(--text-main); font-size: 11px; text-align: center; margin-bottom: 10px;">سيتم إرسال كود مكون من 6 أرقام إلى إيميل الاسترداد الخاص بالغرفة.</p>
-                            <button class="btn-main" style="background: var(--gold-border); color: #000;" onclick="sendResetCode()">إرسال الكود <i class="fas fa-paper-plane"></i></button>
-                            
-                            <div id="codeInputArea" style="display: none; margin-top: 10px;">
-                                <div class="input-group">
-                                    <i class="fas fa-key"></i>
-                                    <input type="text" id="recoveryCodeInput" placeholder="أدخل الكود المكون من 6 أرقام">
-                                </div>
-                                <button class="btn-main" onclick="verifyResetCode()">تأكيد الكود <i class="fas fa-check"></i></button>
-                            </div>
-                            <button class="btn-secondary" style="background:transparent; color:var(--text-sub); border:none;" onclick="closeRoomAuthModal()">إلغاء</button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -608,11 +414,21 @@
         </div>
     </div>
 
+    <!-- نافذة خيارات الضغط المطول من الخارج لحذف الغرفة -->
+    <div id="longPressModal" class="modal-overlay" onclick="closeLongPressModal()">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <div class="modal-header"><h3 id="longPressTitle">خيارات الغرفة</h3></div>
+            <div class="modal-body">
+                <button class="btn-main" style="border-color:var(--danger); color:var(--danger);" onclick="actionLongPressDelete()"><i class="fas fa-trash-alt"></i> حذف الغرفة من القائمة</button>
+                <button class="btn-secondary" style="background:transparent;" onclick="closeLongPressModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserSessionPersistence, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getDatabase, ref, set, get, update, push, onValue, remove, off } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
-        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDRRdm1GjZZBCumw2_w2X7ZUMkb6q1LvrU",
@@ -621,81 +437,81 @@
             projectId: "chatrima",
             storageBucket: "chatrima.appspot.com",
             messagingSenderId: "1015405153719",
-            appId: "1:1015405153719:web:68e090063d02b6622a2c32",
-            measurementId: "G-KDBBTEPHJ5"
+            appId: "1:1015405153719:web:68e090063d02b6622a2c32"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getDatabase(app);
-        const storage = getStorage(app);
+
+        const OWNER_EMAIL = "Bin2farea@gmail.com";
 
         let currentRoomId = null;
-        let currentUserData = null;
+        let activeRoomIdForMessages = null; 
         let allRooms = {}; 
-        let targetRoomIdForRecovery = null;
-        let generatedResetCode = null;
+        let myJoinedRooms = {}; 
         let activeMessagesRef = null;
-        let leftRooms = JSON.parse(sessionStorage.getItem('leftRooms') || '{}');
+        let longPressTargetId = null;
+        let pressTimer = null;
 
-        setPersistence(auth, browserSessionPersistence).catch((error) => console.log(error));
+        function playNimbuzzSound(type = 'beep') {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(1760, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.25);
+            } catch(e) {}
+        }
 
-        function showLoading(text) { document.getElementById('loadingScreen').style.display = 'flex'; document.getElementById('loadingText').innerText = text; }
-        function hideLoading() { document.getElementById('loadingScreen').style.display = 'none'; }
+        setPersistence(auth, browserSessionPersistence).catch(() => {});
 
-        function showErrorBanner(msg) {
-            const banner = document.getElementById('chatErrorBanner');
-            if(banner) {
-                banner.innerText = msg;
-                banner.style.display = 'block';
-                setTimeout(() => { banner.style.display = 'none'; }, 4000);
-            }
+        function showLoading(text) { 
+            const ls = document.getElementById('loadingScreen');
+            if(ls) ls.style.display = 'flex'; 
+            document.getElementById('loadingText').innerText = text; 
+            setTimeout(() => { hideLoading(); }, 6000);
+        }
+        function hideLoading() { 
+            const ls = document.getElementById('loadingScreen');
+            if(ls) ls.style.display = 'none'; 
         }
 
         window.showRegister = function() { document.getElementById('loginCard').style.display = 'none'; document.getElementById('registerCard').style.display = 'flex'; }
         window.showLogin = function() { document.getElementById('registerCard').style.display = 'none'; document.getElementById('loginCard').style.display = 'flex'; }
 
-        window.loginUser = function() {
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
-            if(!email || !password) return alert("أدخل البريد وكلمة المرور");
-            showLoading("جاري الدخول...");
-            signInWithEmailAndPassword(auth, email, password)
-                .then(() => hideLoading())
-                .catch(err => { 
-                    hideLoading(); 
-                    alert("خطأ في الدخول: " + err.message); 
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginBtn = document.getElementById('loginBtn');
+            if(loginBtn) {
+                loginBtn.addEventListener('click', () => {
+                    const email = document.getElementById('loginEmail').value.trim();
+                    const password = document.getElementById('loginPassword').value;
+                    if(!email || !password) return alert("أدخل البريد وكلمة المرور.");
+                    showLoading("جاري تسجيل الدخول...");
+                    signInWithEmailAndPassword(auth, email, password).then(() => hideLoading()).catch(() => { hideLoading(); alert("خطأ في الدخول."); });
                 });
-        }
+            }
 
-        window.resetAccountPassword = function() {
-            const email = document.getElementById('loginEmail').value.trim();
-            if(!email) return alert("الرجاء كتابة بريدك الإلكتروني في خانة البريد أولاً، ثم اضغط على نسيت كلمة المرور.");
-            
-            showLoading("جاري إرسال رابط الاستعادة...");
-            sendPasswordResetEmail(auth, email)
-                .then(() => {
-                    hideLoading();
-                    alert("✅ تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني.");
-                })
-                .catch((error) => {
-                    hideLoading();
-                    alert("خطأ: " + error.message);
+            const registerBtn = document.getElementById('registerBtn');
+            if(registerBtn) {
+                registerBtn.addEventListener('click', () => {
+                    const name = document.getElementById('regName').value.trim();
+                    const email = document.getElementById('regEmail').value.trim();
+                    const password = document.getElementById('regPass').value;
+                    if(!name || !email || !password) return alert("أكمل البيانات.");
+                    showLoading("جاري التسجيل...");
+                    createUserWithEmailAndPassword(auth, email, password).then((uc) => {
+                        set(ref(db, 'users/' + uc.user.uid), { name: name, email: email }).then(() => hideLoading());
+                    }).catch(() => { hideLoading(); alert("فشل التسجيل."); });
                 });
-        }
-
-        window.registerUser = function() {
-            const name = document.getElementById('regName').value.trim();
-            const email = document.getElementById('regEmail').value.trim();
-            const password = document.getElementById('regPass').value;
-            if(!name || !email || !password) return alert("أكمل البيانات");
-            showLoading("جاري التسجيل...");
-            createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
-                set(ref(db, 'users/' + userCredential.user.uid), { 
-                    name: name, email: email, status: 'online', privacy: { lastSeen: true, profilePic: true, readReceipts: true }
-                }).then(() => hideLoading());
-            }).catch(err => { hideLoading(); alert(err.message); });
-        }
+            }
+        });
 
         window.logoutUser = function() {
             signOut(auth).then(() => { 
@@ -706,6 +522,7 @@
         }
 
         onAuthStateChanged(auth, (user) => {
+            hideLoading();
             if (user) {
                 document.getElementById('loginCard').style.display = 'none';
                 document.getElementById('registerCard').style.display = 'none';
@@ -722,397 +539,302 @@
 
         function loadUserProfile(user) {
             get(ref(db, 'users/' + user.uid)).then((snapshot) => {
-                let displayName = "";
-                if (snapshot.exists()) {
-                    currentUserData = snapshot.val();
-                    displayName = currentUserData.name; 
-                    
-                    if(currentUserData.avatar) {
-                        document.getElementById('topAvatar').innerHTML = `<img src="${currentUserData.avatar}">`;
-                        document.getElementById('sideMenuAvatar').innerHTML = `<img src="${currentUserData.avatar}">`;
-                    }
-                    if(currentUserData.privacy) {
-                        document.getElementById('privacyLastSeen').checked = currentUserData.privacy.lastSeen;
-                        document.getElementById('privacyProfilePic').checked = currentUserData.privacy.profilePic;
-                        document.getElementById('privacyReadReceipts').checked = currentUserData.privacy.readReceipts;
-                    }
-                }
-                if(!displayName) displayName = user.email.split('@')[0];
-                
-                document.getElementById('topUserName').innerText = displayName;
-                document.getElementById('sideMenuName').innerText = displayName;
-                document.getElementById('editProfileName').value = displayName;
-                document.getElementById('editRecoveryEmail').value = currentUserData.recoveryEmail || "";
+                let name = snapshot.exists() ? snapshot.val().name : user.email.split('@')[0];
+                document.getElementById('topUserName').innerText = name;
+                document.getElementById('sideMenuName').innerText = name;
             });
         }
 
         window.openSideMenu = function() { document.getElementById('sideMenu').classList.add('open'); document.getElementById('menuOverlay').style.display = 'block'; }
         window.closeSideMenu = function() { document.getElementById('sideMenu').classList.remove('open'); document.getElementById('menuOverlay').style.display = 'none'; }
 
-        window.openPage = function(pageId) { document.getElementById(pageId).style.display = 'flex'; }
-        window.closePage = function(pageId) { document.getElementById(pageId).style.display = 'none'; }
-
-        window.saveProfileChanges = function() {
-            const newName = document.getElementById('editProfileName').value.trim();
-            const recEmail = document.getElementById('editRecoveryEmail').value.trim();
-            
-            if(!newName) return alert("الاسم مطلوب");
-            
-            showLoading("جاري الحفظ...");
-            update(ref(db, 'users/' + auth.currentUser.uid), { 
-                name: newName,
-                recoveryEmail: recEmail 
-            }).then(() => {
-                hideLoading();
-                document.getElementById('topUserName').innerText = newName; 
-                document.getElementById('sideMenuName').innerText = newName;
-                alert("تم حفظ التعديلات بنجاح!");
-            });
-        }
-
-        window.savePrivacySetting = function(key, value) {
-            update(ref(db, 'users/' + auth.currentUser.uid + '/privacy'), { [key]: value });
-        }
-
-        window.selectRingtone = function(element) {
-            document.querySelectorAll('.ringtone-item').forEach(el => {
-                el.classList.remove('selected');
-                el.innerHTML = el.innerHTML.replace('<i class="fas fa-check-circle" style="color:var(--gold-border);"></i>', '');
-            });
-            element.classList.add('selected');
-            element.innerHTML += ' <i class="fas fa-check-circle" style="color:var(--gold-border);"></i>';
-        }
-
         function loadRooms() {
             const roomsRef = ref(db, 'rooms');
             onValue(roomsRef, (snapshot) => {
                 allRooms = snapshot.val() || {};
-                const roomListContainer = document.getElementById('roomListContainer');
-                const mainChatList = document.getElementById('mainChatList');
-                roomListContainer.innerHTML = '';
-                mainChatList.innerHTML = '';
-
-                if (snapshot.exists()) {
-                    for (const roomId in allRooms) {
-                        const room = allRooms[roomId];
-                        const avatarText = room.name.substring(0, 2);
-                        const privateIcon = room.settings && room.settings.isPrivate ? ' 🔒' : '';
-                        const countryText = room.settings && room.settings.country ? room.settings.country : 'اضغط للدخول...';
-
-                        const isLeft = leftRooms[roomId] === true;
-                        const statusDotClass = isLeft ? 'status-dot offline' : 'status-dot online';
-
-                        const roomHTML = `
-                            <div class="chat-list-item">
-                                <div class="chat-avatar-wrapper" onclick="enterRoom('${roomId}')">
-                                    <div class="chat-avatar" style="background: var(--gold-border); color: #000;">${avatarText}</div>
-                                    <div class="${statusDotClass}"></div>
-                                </div>
-                                <div class="chat-info" onclick="enterRoom('${roomId}')">
-                                    <div class="chat-name-row">
-                                        <span class="chat-name">${room.name}${privateIcon}</span>
-                                    </div>
-                                    <span class="chat-last-msg">${countryText}</span>
-                                </div>
-                                <button class="delete-chat-btn" onclick="deleteRoom('${roomId}', event)" title="حذف الغرفة"><i class="fas fa-trash-alt"></i></button>
-                            </div>
-                        `;
-                        roomListContainer.insertAdjacentHTML('beforeend', roomHTML);
-                        mainChatList.insertAdjacentHTML('beforeend', roomHTML);
-                    }
-                } else {
-                    mainChatList.innerHTML = '<div class="empty-state">لا توجد غرف حالياً...</div>';
-                }
+                renderRoomsModalList();
+                renderMainChatList();
             });
         }
 
-        window.deleteRoom = function(roomId, event) {
-            event.stopPropagation();
-            if (confirm("هل أنت متأكد من حذف هذه الغرفة والدردشة الخاصة بها؟")) {
-                showLoading("جاري الحذف...");
-                remove(ref(db, 'rooms/' + roomId)).then(() => {
-                    remove(ref(db, 'roomMessages/' + roomId)).then(() => {
-                        hideLoading();
-                        alert("✅ تم حذف الغرفة بنجاح");
-                    });
-                }).catch((err) => {
-                    hideLoading();
-                    alert("خطأ أثناء الحذف: " + err.message);
-                });
+        function renderRoomsModalList() {
+            const c = document.getElementById('roomListContainer');
+            if(!c) return;
+            c.innerHTML = '';
+            for (const rId in allRooms) {
+                const room = allRooms[rId];
+                c.insertAdjacentHTML('beforeend', `
+                    <div class="chat-list-item" onclick="enterRoom('${rId}')">
+                        <div class="chat-avatar-wrapper"><div class="chat-avatar">${room.name.substring(0, 2)}</div><div class="status-dot online"></div></div>
+                        <div class="chat-info"><span class="chat-name">${room.name}</span><span class="chat-last-msg">غرفة عامة</span></div>
+                    </div>
+                `);
             }
-        };
+        }
+
+        function renderMainChatList() {
+            const m = document.getElementById('mainChatList');
+            if(!m) return;
+            m.innerHTML = '';
+            let has = false;
+
+            for (const rId in myJoinedRooms) {
+                const room = allRooms[rId];
+                if (!room) continue;
+                has = true;
+                
+                const isActive = (activeRoomIdForMessages === rId) ? ' active-room-item' : '';
+                const dotStatusClass = (activeRoomIdForMessages === rId) ? 'online' : 'offline';
+                const statusText = (activeRoomIdForMessages === rId) ? 'محادثة نشطة' : 'مغلقة';
+
+                m.insertAdjacentHTML('beforeend', `
+                    <div class="chat-list-item${isActive}" onclick="openChatRoomDirect('${rId}', '${room.name}')" 
+                         onmousedown="startLongPress('${rId}')" ontouchstart="startLongPress('${rId}')" 
+                         onmouseup="cancelLongPress()" ontouchend="cancelLongPress()" onmouseleave="cancelLongPress()">
+                        <div class="chat-avatar-wrapper">
+                            <div class="chat-avatar">${room.name.substring(0, 2)}</div>
+                            <div class="status-dot ${dotStatusClass}"></div>
+                        </div>
+                        <div class="chat-info"><span class="chat-name">${room.name}</span><span class="chat-last-msg">${statusText}</span></div>
+                    </div>
+                `);
+            }
+
+            if (!has) {
+                m.innerHTML = '<div class="empty-state">لا توجد محادثات حالياً... افتح "غرف الدردشة".</div>';
+            }
+        }
+
+        function startLongPress(id) {
+            pressTimer = setTimeout(() => {
+                longPressTargetId = id;
+                document.getElementById('longPressTitle').innerText = "خيارات الغرفة";
+                document.getElementById('longPressModal').style.display = 'flex';
+            }, 600);
+        }
+        function cancelLongPress() { clearTimeout(pressTimer); }
+        window.closeLongPressModal = function() { document.getElementById('longPressModal').style.display = 'none'; }
+        
+        window.actionLongPressDelete = function() {
+            delete myJoinedRooms[longPressTargetId];
+            closeLongPressModal();
+            renderMainChatList();
+        }
 
         window.openRoomsModal = function() { document.getElementById('roomsModal').style.display = 'flex'; }
-
         window.openCreateRoomModal = function() {
             document.getElementById('roomsModal').style.display = 'none';
             document.getElementById('createRoomModal').style.display = 'flex';
         }
 
-        window.togglePassVisibility = function() {
-            const isPrivate = document.getElementById('isPrivateRoom').checked;
-            const passGroup = document.getElementById('passGroup');
-            const passGroupConfirm = document.getElementById('passGroupConfirm');
-            const roomRecoveryEmailGroup = document.getElementById('roomRecoveryEmailGroup');
-            
-            if(isPrivate) {
-                passGroup.style.display = 'block';
-                passGroupConfirm.style.display = 'block';
-                roomRecoveryEmailGroup.style.display = 'block';
-            } else {
-                passGroup.style.display = 'none';
-                passGroupConfirm.style.display = 'none';
-                roomRecoveryEmailGroup.style.display = 'none';
-                document.getElementById('newRoomPass').value = '';
-                document.getElementById('newRoomPassConfirm').value = '';
-                document.getElementById('newRoomRecoveryEmail').value = '';
-            }
-        }
-
         window.submitNewRoom = function() {
-            const roomName = document.getElementById('newRoomName').value.trim();
-            const roomMax = document.getElementById('newRoomMax').value.trim() || "25";
-            const roomCountry = document.getElementById('newRoomCountry').value.trim();
-            const hideFromSearch = document.getElementById('hideFromSearch').checked;
-            const isPrivate = document.getElementById('isPrivateRoom').checked;
-            const roomPass = document.getElementById('newRoomPass').value;
-            const roomPassConfirm = document.getElementById('newRoomPassConfirm').value;
-            const roomRecoveryEmail = document.getElementById('newRoomRecoveryEmail').value.trim();
-
-            if (roomName === "") { alert("الرجاء إدخال اسم الغرفة."); return; }
-            if (isPrivate) {
-                if (roomPass === "") { alert("الرجاء إدخال الرمز السري."); return; }
-                if (roomPass !== roomPassConfirm) { alert("الرمز السري وتأكيده غير متطابقين!"); return; }
-                if (roomRecoveryEmail === "") { alert("الرجاء إدخال إيميل استرداد رمز الغرفة."); return; }
-            }
-
-            showLoading("جاري إنشاء الغرفة...");
-
-            const newRoomRef = push(ref(db, 'rooms'));
-            set(newRoomRef, {
-                name: roomName, 
-                maxUsers: roomMax, 
-                createdBy: auth.currentUser.uid, 
-                createdAt: Date.now(),
-                status: 'active',
-                settings: {
-                    country: roomCountry,
-                    password: isPrivate ? roomPass : null,
-                    isPrivate: isPrivate,
-                    hideFromSearch: hideFromSearch,
-                    recoveryEmail: isPrivate ? roomRecoveryEmail : null
-                }
-            }).then(() => {
-                hideLoading();
+            const name = document.getElementById('newRoomName').value.trim();
+            if(!name) return alert("أدخل اسم الغرفة.");
+            const newRef = push(ref(db, 'rooms'));
+            set(newRef, { name: name, createdBy: auth.currentUser.uid }).then(() => {
                 document.getElementById('createRoomModal').style.display = 'none';
-                alert("✅ تم إنشاء الغرفة بنجاح!");
-            }).catch(err => {
-                hideLoading();
-                alert("خطأ: " + err.message);
+                alert("تم إنشاء الغرفة.");
             });
         };
 
-        window.enterRoom = function(roomId) {
-            const room = allRooms[roomId];
-            if (!room) return;
-            
-            if (room.settings && room.settings.isPrivate) {
-                targetRoomIdForRecovery = roomId;
-                document.getElementById('roomsModal').style.display = 'none';
-                document.getElementById('roomAuthModal').style.display = 'flex';
-                document.getElementById('enterRoomPass').value = '';
-                document.getElementById('roomPassStep').style.display = 'block';
-                document.getElementById('roomResetStep').style.display = 'none';
-                currentRoomId = roomId;
-            } else {
-                openChatRoomDirect(roomId, room.name);
-            }
-        };
-
-        window.verifyRoomPass = function() {
-            const enteredPass = document.getElementById('enterRoomPass').value;
-            const room = allRooms[currentRoomId];
-            if (room && room.settings && room.settings.password === enteredPass) {
-                document.getElementById('roomAuthModal').style.display = 'none';
-                openChatRoomDirect(currentRoomId, room.name);
-            } else {
-                alert("❌ الرمز السري غير صحيح!");
-            }
-        };
-
-        window.openRoomPassReset = function() {
-            document.getElementById('roomPassStep').style.display = 'none';
-            document.getElementById('roomResetStep').style.display = 'block';
-        };
-
-        window.closeRoomAuthModal = function() {
-            document.getElementById('roomAuthModal').style.display = 'none';
-        };
-
-        window.sendResetCode = function() {
-            const room = allRooms[currentRoomId];
-            if (!room || !room.settings || !room.settings.recoveryEmail) {
-                alert("لا يوجد إيميل استرداد مسجل لهذه الغرفة.");
-                return;
-            }
-            generatedResetCode = Math.floor(100000 + Math.random() * 900000).toString();
-            alert(`📨 تم محاكاة إرسال كود الاسترداد إلى الإيميل: ${room.settings.recoveryEmail}\nالكود التجريبي هو: ${generatedResetCode}`);
-            document.getElementById('codeInputArea').style.display = 'block';
-        };
-
-        window.verifyResetCode = function() {
-            const inputCode = document.getElementById('recoveryCodeInput').value.trim();
-            if (inputCode === generatedResetCode) {
-                const room = allRooms[currentRoomId];
-                alert(`✅ الكود صحيح! الرمز السري للغرفة هو: ${room.settings.password}`);
-                document.getElementById('roomResetStep').style.display = 'none';
-                document.getElementById('roomPassStep').style.display = 'block';
-                document.getElementById('codeInputArea').style.display = 'none';
-            } else {
-                alert("❌ الكود غير صحيح!");
-            }
-        };
-
-        window.openChatRoomDirect = function(roomId, roomName) {
-            currentRoomId = roomId;
-            
-            if(leftRooms[roomId]) {
-                delete leftRooms[roomId];
-                sessionStorage.setItem('leftRooms', JSON.stringify(leftRooms));
-            }
-            
-            const statusDot = document.getElementById('roomHeaderStatusDot');
-            statusDot.className = 'room-header-status-dot online';
-
+        window.enterRoom = function(rId) {
             document.getElementById('roomsModal').style.display = 'none';
-            document.getElementById('currentRoomName').innerText = roomName;
-            document.getElementById('roomHeaderAvatar').innerHTML = `<i class="fas fa-comments"></i>`;
+            openChatRoomDirect(rId, allRooms[rId].name);
+        };
+
+        window.openChatRoomDirect = function(rId, rName) {
+            currentRoomId = rId;
+            activeRoomIdForMessages = rId;
+            myJoinedRooms[rId] = true;
+            renderMainChatList();
+
+            document.getElementById('currentRoomName').innerText = rName;
             document.getElementById('roomChatPage').style.display = 'flex';
-            document.getElementById('roomDropdownMenu').style.display = 'none';
-            loadRoomMessages(roomId);
+            checkAndSendSystemWelcome(rId);
+            loadRoomMessages(rId);
+        };
+
+        function checkAndSendSystemWelcome(rId) {
+            const myUid = auth.currentUser.uid;
+            get(ref(db, `roomWelcomeSent/${rId}/${myUid}`)).then((snap) => {
+                if (!snap.exists()) {
+                    set(ref(db, `roomWelcomeSent/${rId}/${myUid}`), true);
+                    const sysRef = push(ref(db, 'roomMessages/' + rId));
+                    set(sysRef, {
+                        senderId: 'SYSTEM',
+                        senderName: 'نظام الحماية',
+                        text: '⚠️ مرحباً بك في الغرفة! نرجو الالتزام بشروط وقوانين الدردشة واحترام الآخرين.',
+                        timestamp: Date.now()
+                    });
+                }
+            });
+        }
+
+        window.minimizeRoomChat = function() {
+            activeRoomIdForMessages = null;
+            document.getElementById('roomChatPage').style.display = 'none';
+            renderMainChatList();
         };
 
         window.closeRoomChat = function() {
-            if (activeMessagesRef) {
-                off(activeMessagesRef);
-            }
-            document.getElementById('roomChatPage').style.display = 'none';
-            document.getElementById('roomDropdownMenu').style.display = 'none';
-            loadRooms();
-        };
-
-        window.toggleRoomDropdown = function(event) {
-            event.stopPropagation();
-            const menu = document.getElementById('roomDropdownMenu');
-            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
-        };
-
-        document.addEventListener('click', function() {
-            const menu = document.getElementById('roomDropdownMenu');
-            if (menu) menu.style.display = 'none';
-        });
-
-        window.showRoomMembers = function() {
-            alert("👥 الأعضاء المتواجدون حالياً في الغرفة:\n- أنت (متصل)\n- زوار الغرفة الآخرون");
-        };
-
-        window.showRoomSettings = function() {
-            const room = allRooms[currentRoomId];
-            if (!room) return;
-            alert(`⚙️ إعدادات الغرفة:\n- اسم الغرفة: ${room.name}\n- الدولة: ${room.settings?.country || 'غير محدد'}\n- الحد الأقصى للزوار: ${room.maxUsers || 25}\n- نوع الغرفة: ${room.settings?.isPrivate ? 'خاصة (برمز سري)' : 'عامة'}`);
-        };
-
-        window.leaveRoom = function() {
+            if (activeMessagesRef) off(activeMessagesRef);
             if (currentRoomId) {
-                leftRooms[currentRoomId] = true;
-                sessionStorage.setItem('leftRooms', JSON.stringify(leftRooms));
+                remove(ref(db, 'roomMessages/' + currentRoomId));
+                remove(ref(db, `roomWelcomeSent/${currentRoomId}/${auth.currentUser.uid}`));
             }
-            document.getElementById('roomDropdownMenu').style.display = 'none';
-            closeRoomChat();
+            activeRoomIdForMessages = null;
+            document.getElementById('roomChatPage').style.display = 'none';
+            renderMainChatList();
         };
+
+        window.openRoomMembersModal = function() {
+            document.getElementById('roomMembersModal').style.display = 'flex';
+            loadRoomMembersList();
+        };
+        window.closeRoomMembersModal = function() { document.getElementById('roomMembersModal').style.display = 'none'; }
+
+        function loadRoomMembersList() {
+            const container = document.getElementById('roomMembersListContainer');
+            container.innerHTML = '';
+            if (!currentRoomId) return;
+
+            const roomCreator = allRooms[currentRoomId]?.createdBy;
+            const myUid = auth.currentUser.uid;
+            const isOwnerOrAdmin = (roomCreator === myUid || auth.currentUser.email.toLowerCase() === OWNER_EMAIL.toLowerCase());
+
+            get(ref(db, 'users')).then((snap) => {
+                if (snap.exists()) {
+                    const users = snap.val();
+                    for (let uId in users) {
+                        const u = users[uId];
+                        let adminOpts = '';
+
+                        if (isOwnerOrAdmin && uId !== myUid && uId !== roomCreator) {
+                            adminOpts = `
+                                <button class="member-option-btn" onclick="actionGiveAdmin('${uId}', '${u.name}')"><i class="fas fa-user-shield"></i> منح إشراف</button>
+                                <button class="member-option-btn danger" onclick="actionWarn('${uId}', '${u.name}')"><i class="fas fa-exclamation-triangle"></i> تنبيه</button>
+                                <button class="member-option-btn danger" onclick="actionKick('${uId}', '${u.name}')"><i class="fas fa-user-slash"></i> طرد</button>
+                                <button class="member-option-btn danger" onclick="actionBan('${uId}', '${u.name}')"><i class="fas fa-ban"></i> حظر</button>
+                            `;
+                        }
+
+                        let friendOpt = '';
+                        if (uId !== myUid) {
+                            friendOpt = `<button class="member-option-btn" onclick="sendFriendRequest('${uId}', '${u.name}')"><i class="fas fa-user-plus"></i> إضافة إلى قائمة الأصدقاء</button>
+                                         <button class="member-option-btn" onclick="openMiniPrivateChat('${uId}', '${u.name}')"><i class="fas fa-comment-dots"></i> مراسلة خاصة</button>`;
+                        }
+
+                        container.insertAdjacentHTML('beforeend', `
+                            <div class="member-card-wrapper">
+                                <div class="member-main-row" onclick="toggleMemberDropdown('${uId}')">
+                                    <div class="member-info">
+                                        <div class="chat-avatar" style="width:32px; height:32px; font-size:12px;">${u.name.substring(0, 2)}</div>
+                                        <div class="member-name">${u.name} ${uId === roomCreator ? '👑' : ''}</div>
+                                    </div>
+                                    <i class="fas fa-chevron-down" style="color:var(--gold-border); font-size:11px;"></i>
+                                </div>
+                                <div class="member-dropdown-options" id="member-opts-${uId}">
+                                    ${friendOpt}
+                                    ${adminOpts}
+                                </div>
+                            </div>
+                        `);
+                    }
+                }
+            });
+        }
+
+        window.toggleMemberDropdown = function(uId) {
+            const box = document.getElementById(`member-opts-${uId}`);
+            if(box) {
+                box.style.display = (box.style.display === 'flex') ? 'none' : 'flex';
+            }
+        };
+
+        window.sendFriendRequest = function(uId, name) {
+            push(ref(db, 'friendRequests/' + uId), { uid: auth.currentUser.uid, name: document.getElementById('topUserName').innerText, timestamp: Date.now() });
+            alert(`تم إرسال طلب الصداقة إلى ${name}.`);
+        };
+
+        window.openMiniPrivateChat = function(uId, name) {
+            closeRoomMembersModal();
+            document.getElementById('miniChatFriendName').innerText = name;
+            document.getElementById('miniPrivateChatModal').style.display = 'flex';
+        };
+        window.closeMiniPrivateChat = function() { document.getElementById('miniPrivateChatModal').style.display = 'none'; }
+        window.sendMiniPrivateMsg = function() {
+            const input = document.getElementById('miniChatInput');
+            const txt = input.value.trim();
+            if(!txt) return;
+            const box = document.getElementById('miniChatMessagesBox');
+            box.insertAdjacentHTML('beforeend', `<div style="background:var(--gold-border); padding:5px 8px; border-radius:8px; margin-bottom:4px; align-self:flex-end;"><b>أنا:</b> ${txt}</div>`);
+            input.value = '';
+            box.scrollTop = box.scrollHeight;
+        };
+        window.handleMiniChatKey = function(e) { if(e.key === 'Enter') sendMiniPrivateMsg(); };
+
+        window.actionGiveAdmin = function(uid, name) { alert(`تم منح الإشراف لـ ${name}.`); };
+        window.actionWarn = function(uid, name) { alert(`تم إرسال تنبيه لـ ${name}.`); };
+        window.actionKick = function(uid, name) { alert(`تم طرد ${name}.`); };
+        window.actionBan = function(uid, name) { alert(`تم حظر ${name}.`); };
 
         window.sendRoomMessage = function() {
-            if (leftRooms[currentRoomId]) {
-                showErrorBanner("لا يمكنك الإرسال، لقد تركت الغرفة!");
-                return;
-            }
+            const input = document.getElementById('roomMsgInput');
+            const text = input.value.trim();
+            if (!text || !currentRoomId) return;
 
-            const msgInput = document.getElementById('roomMsgInput');
-            const text = msgInput.value.trim();
-            
-            if (!text) return;
-            if (!currentRoomId) {
-                showErrorBanner("خطأ: لم يتم تحديد الغرفة الحالية!");
-                return;
-            }
-            if (!auth.currentUser) {
-                showErrorBanner("خطأ: يجب تسجيل الدخول أولاً لإرسال الرسائل!");
-                return;
-            }
-
-            const msgRef = push(ref(db, 'roomMessages/' + currentRoomId));
-            set(msgRef, {
+            push(ref(db, 'roomMessages/' + currentRoomId), {
                 senderId: auth.currentUser.uid,
                 senderName: document.getElementById('topUserName').innerText,
                 text: text,
                 timestamp: Date.now()
-            }).then(() => {
-                msgInput.value = '';
-            }).catch((err) => {
-                showErrorBanner("فشل الإرسال: " + err.message);
-            });
+            }).then(() => { input.value = ''; });
         };
 
-        window.handleRoomMsgKeyPress = function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                sendRoomMessage();
-            }
-        };
+        window.handleRoomMsgKeyPress = function(e) { if (e.key === 'Enter') sendRoomMessage(); };
 
-        function loadRoomMessages(roomId) {
-            const msgContainer = document.getElementById('roomChatMessages');
-            msgContainer.innerHTML = '';
-            
-            if (activeMessagesRef) {
-                off(activeMessagesRef);
-            }
-            
-            activeMessagesRef = ref(db, 'roomMessages/' + roomId);
-            
+        function loadRoomMessages(rId) {
+            const box = document.getElementById('roomChatMessages');
+            box.innerHTML = '';
+            if (activeMessagesRef) off(activeMessagesRef);
+
+            activeMessagesRef = ref(db, 'roomMessages/' + rId);
             onValue(activeMessagesRef, (snapshot) => {
-                if (leftRooms[roomId]) return;
-
-                msgContainer.innerHTML = '';
+                box.innerHTML = '';
                 if (snapshot.exists()) {
                     const data = snapshot.val();
-                    for (let key in data) {
-                        const msg = data[key];
-                        const isMyMsg = msg.senderId === auth.currentUser.uid;
-                        const bubbleClass = isMyMsg ? 'msg-bubble my-msg' : 'msg-bubble other-msg';
-                        
-                        const msgHTML = `
-                            <div class="${bubbleClass}">
-                                <span class="msg-sender">${msg.senderName}</span>
-                                <span>${msg.text}</span>
+                    let lastMsg = null;
+                    for (let k in data) {
+                        lastMsg = data[k];
+                        const isMe = lastMsg.senderId === auth.currentUser.uid;
+                        const isSys = lastMsg.senderId === 'SYSTEM';
+                        const cls = isSys ? 'msg-bubble system-msg' : (isMe ? 'msg-bubble my-msg' : 'msg-bubble');
+
+                        box.insertAdjacentHTML('beforeend', `
+                            <div class="${cls}">
+                                <span class="msg-sender">${lastMsg.senderName}</span>
+                                <span>${lastMsg.text}</span>
                             </div>
-                        `;
-                        msgContainer.insertAdjacentHTML('beforeend', msgHTML);
+                        `);
                     }
-                    msgContainer.scrollTop = msgContainer.scrollHeight;
+                    box.scrollTop = box.scrollHeight;
+
+                    if (lastMsg && lastMsg.senderId !== auth.currentUser.uid && lastMsg.senderId !== 'SYSTEM') {
+                        playNimbuzzSound('beep');
+                    }
                 } else {
-                    msgContainer.innerHTML = '<div class="empty-state">ابدأ المحادثة في هذه الغرفة...</div>';
+                    box.innerHTML = '<div class="empty-state">ابدأ المحادثة في الغرفة...</div>';
                 }
-            }, (error) => {
-                showErrorBanner("خطأ في تحميل الرسائل: " + error.message);
             });
         }
 
-        window.switchTab = function(tabName) {
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            if(event && event.currentTarget) {
-                event.currentTarget.classList.add('active');
-            }
+        window.switchTab = function(tabName, el) {
+            document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
+            if(el) el.classList.add('active');
+            document.getElementById('section-chats').style.display = (tabName === 'chats') ? 'flex' : 'none';
+            document.getElementById('section-contacts').style.display = (tabName === 'contacts') ? 'flex' : 'none';
+            document.getElementById('section-dialer').style.display = (tabName === 'dialer') ? 'flex' : 'none';
+            document.getElementById('section-more').style.display = (tabName === 'more') ? 'flex' : 'none';
         };
     </script>
 </body>
