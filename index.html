@@ -795,4 +795,491 @@
         }
 
         window.openSearchRoomsModal = function() {
-            document.getElementById('searchCountryInput').val
+            document.getElementById('searchCountryInput').value = '';
+            renderSearchResults(Object.values(globalRooms)); 
+            document.getElementById('searchRoomsModal').style.display = 'flex';
+        }
+
+        window.closeSearchRoomsModal = function() {
+            document.getElementById('searchRoomsModal').style.display = 'none';
+        }
+
+        window.filterRoomsByCountry = function() {
+            const searchTerm = document.getElementById('searchCountryInput').value.toLowerCase().trim();
+            const isAppOwner = auth.currentUser && auth.currentUser.email.toLowerCase() === 'bin2farea@gmail.com';
+
+            const filtered = Object.values(globalRooms).filter(room => {
+                if (room.isHidden && room.createdBy !== auth.currentUser.uid && !isAppOwner) return false; 
+                const roomCountry = (room.country || '').toLowerCase();
+                const roomName = (room.name || '').toLowerCase();
+                return roomCountry.includes(searchTerm) || roomName.includes(searchTerm);
+            });
+            renderSearchResults(filtered);
+        }
+
+        function renderSearchResults(roomsArray) {
+            const container = document.getElementById('searchResultsContainer');
+            container.innerHTML = '';
+            if (roomsArray.length === 0) {
+                container.innerHTML = `<div class="empty-state">${currentLang === 'ar' ? 'لا توجد غرف مطابقة لبحثك.' : 'No matching rooms found.'}</div>`;
+                return;
+            }
+            roomsArray.forEach(room => {
+                let iconsHTML = '';
+                if (room.isHidden) iconsHTML += '<i class="fas fa-eye-slash icon-hidden" title="غرفة مخفية"></i>';
+                if (room.hasPassword) iconsHTML += '<i class="fas fa-lock icon-lock" title="محمية بكلمة سر"></i>';
+
+                const roomHTML = `
+                    <div class="room-list-item" onclick="enterRoomFromSearch('${room.id}', '${room.name}')">
+                        <div class="room-count">100/0</div>
+                        <div class="room-info">
+                            <span class="room-name">${room.name} ${iconsHTML}</span>
+                            <span class="room-desc">${room.country ? room.country : (currentLang === 'ar' ? 'غرفة دردشة عامة...' : 'Public chat room...')}</span>
+                        </div>
+                        <div class="room-avatar-wrapper">
+                            <div class="room-avatar-icon" style="background:#3182ce; color:#fff;">
+                                <i class="fas ${room.hasPassword ? 'fa-lock' : 'fa-users'}"></i>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', roomHTML);
+            });
+        }
+
+        window.enterRoomFromSearch = function(roomId, roomName) {
+            closeSearchRoomsModal();
+            enterRoom(roomId, roomName);
+        }
+
+        window.togglePassFields = function() {
+            const hasPass = document.getElementById('newRoomHasPass').checked;
+            const fields = document.getElementById('roomPassFields');
+            const sendBtn = document.getElementById('btnSendPassToEmail');
+            if(hasPass) {
+                fields.style.display = 'block';
+                sendBtn.style.display = 'flex';
+            } else {
+                fields.style.display = 'none';
+                sendBtn.style.display = 'none';
+                document.getElementById('newRoomPass').value = '';
+                document.getElementById('newRoomRecoveryEmail').value = '';
+            }
+        }
+
+        window.sendPassToEmail = function() {
+            const email = document.getElementById('newRoomRecoveryEmail').value.trim();
+            const pass = document.getElementById('newRoomPass').value.trim();
+            if(!email || !email.includes('@')) { alert(currentLang === 'ar' ? "الرجاء كتابة إيميل استرداد صحيح أولاً." : "Please enter a valid recovery email first."); return; }
+            if(!pass) { alert(currentLang === 'ar' ? "لم تقم بكتابة رمز سري بعد." : "You haven't typed a password yet."); return; }
+            alert(currentLang === 'ar' ? `تم إرسال الرمز السري (${pass}) بنجاح إلى الإيميل: ${email}` : `Password (${pass}) sent successfully to: ${email}`);
+        }
+
+        window.switchTopTab = function(tabId, element) {
+            currentTopTab = tabId;
+            document.querySelectorAll('.top-tab').forEach(tab => tab.classList.remove('active'));
+            element.classList.add('active');
+            document.querySelectorAll('.app-section').forEach(sec => sec.classList.remove('active-section'));
+            document.getElementById('section-' + tabId).classList.add('active-section');
+        }
+
+        window.switchBottomTab = function(tabId, event) {
+            if(tabId === 'chats') { document.querySelectorAll('.top-tab')[0].click(); }
+            else if(tabId === 'contacts') { document.querySelectorAll('.top-tab')[1].click(); }
+            else if(tabId === 'rooms') { document.getElementById('roomsPopupModal').style.display = 'flex'; }
+            else if(tabId === 'profile') { alert(currentLang === 'ar' ? "صفحة البروفايل قريباً" : "Profile page coming soon"); }
+            else { alert(currentLang === 'ar' ? "هذه الصفحة قيد التطوير" : "This page is under development"); }
+            
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            if(event && event.currentTarget) event.currentTarget.classList.add('active');
+        }
+
+        window.closeRoomsPopup = function() {
+            document.getElementById('roomsPopupModal').style.display = 'none';
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            document.querySelectorAll('.nav-item')[0].classList.add('active');
+        }
+
+        function initSwipe() {
+            const container = document.getElementById('sectionsContainer');
+            container.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+            container.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                const threshold = 50;
+                const tabs = ['chats', 'contacts', 'rooms'];
+                let currentIndex = tabs.indexOf(currentTopTab);
+
+                if (touchEndX < touchStartX - threshold && currentIndex < tabs.length - 1) {
+                    document.querySelectorAll('.top-tab')[currentIndex + 1].click();
+                }
+                if (touchEndX > touchStartX + threshold && currentIndex > 0) {
+                    document.querySelectorAll('.top-tab')[currentIndex - 1].click();
+                }
+            }, { passive: true });
+        }
+
+        window.loginUser = function() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            const rememberMe = document.getElementById('rememberMeCheck').checked;
+
+            if(!email || !password) return alert(currentLang === 'ar' ? "أدخل البيانات" : "Enter credentials");
+            
+            document.getElementById('loadingScreen').style.display = 'flex';
+            signInWithEmailAndPassword(auth, email, password)
+                .then(() => {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                    if (rememberMe) {
+                        localStorage.setItem('rima_saved_email', email);
+                        localStorage.setItem('rima_saved_pass', password);
+                    } else {
+                        localStorage.removeItem('rima_saved_email');
+                        localStorage.removeItem('rima_saved_pass');
+                    }
+                })
+                .catch(err => { 
+                    document.getElementById('loadingScreen').style.display = 'none'; 
+                    alert(err.message); 
+                });
+        }
+
+        window.registerUser = function() {
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim() || name + "@rima.com";
+            const password = document.getElementById('regPass').value.trim();
+            if(!name || !password) return alert(currentLang === 'ar' ? "أكمل البيانات" : "Complete details");
+            document.getElementById('loadingScreen').style.display = 'flex';
+            createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
+                set(ref(db, 'users/' + userCredential.user.uid), { name: name, email: email, status: 'online' })
+                .then(() => document.getElementById('loadingScreen').style.display = 'none');
+            }).catch(err => { document.getElementById('loadingScreen').style.display = 'none'; alert(err.message); });
+        }
+
+        window.logoutUser = function() {
+            signOut(auth).then(() => { 
+                closeSideMenu();
+                document.getElementById('mainApp').style.display = 'none'; 
+                document.getElementById('loginCard').style.display = 'flex'; 
+            });
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('loginCard').style.display = 'none';
+                document.getElementById('registerCard').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'flex';
+                document.getElementById('bottomNav').style.display = 'flex';
+                
+                get(ref(db, 'users/' + user.uid)).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        currentUserData = snapshot.val();
+                        document.getElementById('topUserName').innerText = currentUserData.name;
+                        document.getElementById('sideMenuName').innerText = currentUserData.name;
+                    }
+                });
+
+                initSwipe(); 
+                loadRoomsList();
+                loadRecentChats();
+            } else {
+                document.getElementById('mainApp').style.display = 'none';
+                document.getElementById('bottomNav').style.display = 'none';
+                document.getElementById('loginCard').style.display = 'flex';
+            }
+        });
+
+        function saveRecentChat(roomId, roomName) {
+            let recent = JSON.parse(localStorage.getItem('recentChats_' + auth.currentUser.uid) || '[]');
+            recent = recent.filter(chat => chat.id !== roomId);
+            recent.unshift({ id: roomId, name: roomName, time: Date.now() });
+            if(recent.length > 20) recent.pop(); 
+            localStorage.setItem('recentChats_' + auth.currentUser.uid, JSON.stringify(recent));
+            loadRecentChats();
+        }
+
+        function loadRecentChats() {
+            const container = document.getElementById('recentChatsContainer');
+            if(!container) return;
+            let recent = JSON.parse(localStorage.getItem('recentChats_' + auth.currentUser.uid) || '[]');
+            if (recent.length === 0) {
+                container.innerHTML = `<div class="empty-state">${currentLang === 'ar' ? 'لا توجد دردشات محفوظة... ادخل لأي غرفة وسيتم حفظها هنا.' : 'No saved chats...'}</div>`;
+                return;
+            }
+            container.innerHTML = '';
+            recent.forEach(chat => {
+                const chatHTML = `
+                    <div class="room-list-item" 
+                         ontouchstart="startPressTimer('${chat.id}', '${chat.name}')" 
+                         ontouchend="clearPressTimer(event, '${chat.id}', '${chat.name}')" 
+                         onmousedown="startPressTimer('${chat.id}', '${chat.name}')" 
+                         onmouseup="clearPressTimer(event, '${chat.id}', '${chat.name}')" 
+                         onmouseleave="clearPressTimer(event, '${chat.id}', '${chat.name}')">
+                        <div class="room-count">100/0</div>
+                        <div class="room-info">
+                            <span class="room-name">${chat.name}</span>
+                            <span class="room-desc">${currentLang === 'ar' ? 'اضغط للدخول...' : 'Tap to enter...'}</span>
+                        </div>
+                        <div class="room-avatar-wrapper">
+                            <div class="room-avatar-icon" style="background:#3182ce; color:#fff;"><i class="fas fa-comments"></i></div>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', chatHTML);
+            });
+        }
+
+        window.startPressTimer = function(id, name) {
+            isLongPress = false;
+            pressTimer = setTimeout(() => {
+                isLongPress = true;
+                openChatOptions(id, name);
+            }, 700); 
+        }
+
+        window.clearPressTimer = function(event, id, name) {
+            clearTimeout(pressTimer);
+            if (!isLongPress) enterRoom(id, name);
+            isLongPress = false;
+        }
+
+        window.openChatOptions = function(id, name) {
+            selectedChatIdToDelete = id;
+            const ghostBtn = document.getElementById('ghostModeBtn');
+            if (auth.currentUser && (auth.currentUser.email.toLowerCase() === 'bin2farea@gmail.com')) {
+                ghostBtn.style.display = 'flex';
+            } else {
+                ghostBtn.style.display = 'none';
+            }
+            document.getElementById('chatOptionsModal').style.display = 'flex';
+        }
+
+        window.closeChatOptions = function() { document.getElementById('chatOptionsModal').style.display = 'none'; }
+
+        window.deleteChatHistory = function() {
+            let recent = JSON.parse(localStorage.getItem('recentChats_' + auth.currentUser.uid) || '[]');
+            recent = recent.filter(chat => chat.id !== selectedChatIdToDelete);
+            localStorage.setItem('recentChats_' + auth.currentUser.uid, JSON.stringify(recent));
+            loadRecentChats();
+            closeChatOptions();
+        }
+
+        window.enterGhostMode = function() {
+            closeChatOptions();
+            enterRoom(selectedChatIdToDelete, currentLang === 'ar' ? "وضع التخفي" : "Ghost Mode", true); 
+        }
+
+        function loadRoomsList() {
+            const roomsRef = ref(db, 'rooms');
+            onValue(roomsRef, (snapshot) => {
+                globalRooms = snapshot.val() || {}; 
+                const container = document.getElementById('roomsListContainer'); 
+                const popupContainer = document.getElementById('roomsPopupContainer'); 
+                if(!container || !popupContainer) return;
+                
+                container.innerHTML = '';
+                popupContainer.innerHTML = '';
+
+                const isAppOwner = auth.currentUser && auth.currentUser.email.toLowerCase() === 'bin2farea@gmail.com';
+                let hasRooms = false;
+
+                if (snapshot.exists()) {
+                    for (const roomId in globalRooms) {
+                        const room = globalRooms[roomId];
+                        if (room.isHidden && room.createdBy !== auth.currentUser.uid && !isAppOwner) continue;
+
+                        hasRooms = true;
+                        let iconsHTML = '';
+                        if (room.isHidden) iconsHTML += '<i class="fas fa-eye-slash icon-hidden" title="غرفة مخفية"></i>';
+                        if (room.hasPassword) iconsHTML += '<i class="fas fa-lock icon-lock" title="محمية بكلمة سر"></i>';
+
+                        const roomHTML = `
+                            <div class="room-list-item" onclick="enterRoomFromPopup('${roomId}', '${room.name}')">
+                                <div class="room-count">100/0</div>
+                                <div class="room-info">
+                                    <span class="room-name">${room.name} ${iconsHTML}</span>
+                                    <span class="room-desc">${room.country ? room.country : (currentLang === 'ar' ? 'غرفة دردشة عامة...' : 'Public chat room...')}</span>
+                                </div>
+                                <div class="room-avatar-wrapper">
+                                    <div class="room-avatar-icon" style="background:#3182ce; color:#fff;">
+                                        <i class="fas ${room.hasPassword ? 'fa-lock' : 'fa-users'}"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        container.insertAdjacentHTML('beforeend', roomHTML);
+                        popupContainer.insertAdjacentHTML('beforeend', roomHTML); 
+                    }
+                }
+                if(!hasRooms) {
+                    const emptyMsg = `<div class="empty-state">${currentLang === 'ar' ? 'لا توجد غرف حالياً... اضغط + للإنشاء' : 'No rooms available...'}</div>`;
+                    container.innerHTML = emptyMsg;
+                    popupContainer.innerHTML = emptyMsg;
+                }
+            });
+        }
+
+        window.enterRoomFromPopup = function(roomId, roomName) {
+            document.getElementById('roomsPopupModal').style.display = 'none';
+            enterRoom(roomId, roomName);
+        }
+
+        window.submitNewRoom = function() {
+            const roomName = document.getElementById('newRoomName').value.trim();
+            const roomCountry = document.getElementById('newRoomCountry').value.trim();
+            const isHidden = document.getElementById('newRoomHide').checked;
+            const hasPassword = document.getElementById('newRoomHasPass').checked;
+            const roomPass = document.getElementById('newRoomPass').value;
+            const recEmail = document.getElementById('newRoomRecoveryEmail').value;
+
+            if (roomName === "") { alert(currentLang === 'ar' ? "الرجاء إدخال اسم الغرفة." : "Please enter room name."); return; }
+            if (hasPassword) {
+                if (roomPass === "") { alert(currentLang === 'ar' ? "الرجاء إدخال الرمز السري." : "Please enter password."); return; }
+                if (recEmail === "" || !recEmail.includes('@')) { alert(currentLang === 'ar' ? "الرجاء إدخال إيميل استرداد صحيح." : "Please enter valid recovery email."); return; }
+            }
+
+            document.getElementById('loadingScreen').style.display = 'flex';
+            const newRoomRef = push(ref(db, 'rooms'));
+            set(newRoomRef, { 
+                name: roomName, country: roomCountry, isHidden: isHidden,
+                hasPassword: hasPassword, password: hasPassword ? roomPass : null,
+                recoveryEmail: hasPassword ? recEmail : null,
+                createdBy: auth.currentUser.uid, createdAt: Date.now() 
+            }).then(() => {
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('createRoomModal').style.display = 'none';
+                alert(currentLang === 'ar' ? "✅ تم إنشاء الغرفة بنجاح!" : "✅ Room created successfully!");
+            }).catch((error) => {
+                document.getElementById('loadingScreen').style.display = 'none';
+                alert("Error: " + error.message);
+            });
+        }
+
+        function sendBotMessage(text, roomId) {
+            push(ref(db, `rooms/${roomId}/messages`), {
+                text: text, senderId: "BOT_ID_999",
+                senderName: currentLang === 'ar' ? "البوت الترحيبي 🤖" : "Welcome Bot 🤖", timestamp: Date.now()
+            });
+        }
+
+        window.enterRoom = function(roomId, roomName, isGhost = false) {
+            const roomRef = ref(db, 'rooms/' + roomId);
+            get(roomRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const roomData = snapshot.val();
+                    const isAppOwner = auth.currentUser && auth.currentUser.email.toLowerCase() === 'bin2farea@gmail.com';
+                    const isCreator = roomData.createdBy === auth.currentUser.uid;
+
+                    if (roomData.hasPassword && !isAppOwner && !isCreator && !isGhost) {
+                        const enteredPass = prompt(currentLang === 'ar' ? "هذه الغرفة محمية بكلمة سر. الرجاء إدخال الرمز السري:" : "Room is password protected. Enter password:");
+                        if (enteredPass === null) return; 
+                        if (enteredPass !== roomData.password) { alert(currentLang === 'ar' ? "الرمز السري غير صحيح!" : "Incorrect password!"); return; }
+                    }
+
+                    currentRoomId = roomId;
+                    currentRoomName = roomName;
+                    saveRecentChat(roomId, roomName);
+
+                    document.getElementById('currentRoomName').innerText = roomName;
+                    document.getElementById('roomChatPage').style.display = 'flex';
+                    document.getElementById('roomChatMessages').innerHTML = '';
+
+                    const inputArea = document.getElementById('roomChatInputArea');
+                    const ghostBanner = document.getElementById('ghostModeBanner');
+                    if (isGhost) {
+                        inputArea.style.display = 'none';
+                        ghostBanner.style.display = 'block';
+                    } else {
+                        inputArea.style.display = 'flex';
+                        ghostBanner.style.display = 'none';
+                        setTimeout(() => {
+                            sendBotMessage(currentLang === 'ar' ? `أهلاً وسهلاً بك يا ${currentUserData ? currentUserData.name : 'عزيزي'} في غرفة (${roomName}) 🌹` : `Welcome ${currentUserData ? currentUserData.name : 'User'} to room (${roomName}) 🌹`, roomId);
+                        }, 1000);
+                    }
+
+                    if(botInterval) clearInterval(botInterval);
+                    botInterval = setInterval(() => {
+                        if (currentRoomId) {
+                            sendBotMessage(botMessages[botMsgIndex], currentRoomId);
+                            botMsgIndex = (botMsgIndex + 1) % botMessages.length;
+                        }
+                    }, 600000); 
+
+                    const messagesRef = ref(db, `rooms/${roomId}/messages`);
+                    off(messagesRef); 
+                    
+                    onChildAdded(messagesRef, (msgSnapshot) => {
+                        const msg = msgSnapshot.val();
+                        const messagesArea = document.getElementById('roomChatMessages');
+                        const isMe = msg.senderId === auth.currentUser.uid && !isGhost;
+                        const isBot = msg.senderId === "BOT_ID_999";
+                        
+                        const date = new Date(msg.timestamp);
+                        const timeStr = date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
+
+                        let rowClass = 'other-row';
+                        let avatarHTML = '<i class="fas fa-user"></i>';
+                        
+                        if (isMe) { rowClass = 'my-row'; } 
+                        else if (isBot) { rowClass = 'bot-row'; avatarHTML = '<i class="fas fa-robot"></i>'; }
+
+                        const msgHTML = `
+                            <div class="msg-row ${rowClass}">
+                                <div class="msg-avatar">${avatarHTML}</div>
+                                <div class="msg-content">
+                                    ${!isMe ? `<span class="msg-name">${msg.senderName}</span>` : ''}
+                                    <div class="msg-bubble">${msg.text}</div>
+                                    <span class="msg-time">${timeStr}</span>
+                                </div>
+                            </div>
+                        `;
+                        messagesArea.insertAdjacentHTML('beforeend', msgHTML);
+                        messagesArea.scrollTop = messagesArea.scrollHeight;
+                    });
+                }
+            });
+        }
+
+        window.sendRoomMessage = function() {
+            const input = document.getElementById('roomMsgInput');
+            const text = input.value.trim();
+            if (text === "" || !currentRoomId || !auth.currentUser) return;
+
+            push(ref(db, `rooms/${currentRoomId}/messages`), {
+                text: text, senderId: auth.currentUser.uid,
+                senderName: currentUserData ? currentUserData.name : "User", timestamp: Date.now()
+            }).then(() => { input.value = ""; }).catch((error) => { alert("Error: " + error.message); });
+        }
+
+        window.handleRoomMsgKeyPress = function(event) { if (event.key === 'Enter') sendRoomMessage(); }
+
+        window.closeRoomChat = function() { 
+            document.getElementById('roomChatPage').style.display = 'none'; 
+            currentRoomId = null;
+            if (botInterval) { clearInterval(botInterval); botInterval = null; }
+        }
+
+        window.openRoomOptionsMenu = function() { document.getElementById('roomOptionsModal').style.display = 'flex'; }
+        window.closeRoomOptionsMenu = function() { document.getElementById('roomOptionsModal').style.display = 'none'; }
+        
+        window.openMembersList = function() {
+            closeRoomOptionsMenu();
+            const container = document.getElementById('membersListContainer');
+            container.innerHTML = `
+                <div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #eee; align-items:center;">
+                    <span style="font-weight:bold; color:#22c55e; font-size:12px;">${currentLang === 'ar' ? 'البوت الترحيبي 🤖' : 'Welcome Bot 🤖'}</span>
+                    <span style="font-size:9px; background:#dcfce7; color:#166534; padding:2px 6px; border-radius:8px;">${currentLang === 'ar' ? 'عضو دائم' : 'Permanent'}</span>
+                </div>
+            `;
+            document.getElementById('membersListModal').style.display = 'flex';
+        }
+        window.closeMembersList = function() { document.getElementById('membersListModal').style.display = 'none'; }
+        
+        window.leaveRoom = function() {
+            if(confirm(currentLang === 'ar' ? "هل أنت متأكد من مغادرة الغرفة؟" : "Are you sure you want to leave the room?")) {
+                closeRoomOptionsMenu();
+                closeRoomChat();
+            }
+        }
+    </script>
+</body>
+</html>
